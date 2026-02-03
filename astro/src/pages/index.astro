@@ -10,6 +10,7 @@ import {Footer} from '../components/sections/Footer'
 import Layout from '../layouts/Layout.astro';
 import SiteLayout from "../layouts/SiteLayout";
 import {ResizableLayout} from '../layouts/ResizableLayout'
+import {SectionDivider} from '../components/ui/section-divider'
 ---
 
 <Layout>
@@ -17,15 +18,15 @@ import {ResizableLayout} from '../layouts/ResizableLayout'
         <HomeHero client:load/>
         <ResizableLayout client:load>
             <AboutMe/>
-            <hr class="mx-auto max-w-5xl border-t border-border" />
+            <SectionDivider/>
             <LatestArticles tinted={true}/>
-            <hr class="border-t border-border" />
+            <SectionDivider/>
             <LatestPodcasts/>
-            <hr class="mx-auto max-w-5xl border-t border-border" />
+            <SectionDivider/>
             <LatestReadings tinted={true}/>
-            <hr class="border-t border-border" />
+            <SectionDivider/>
             <LatestProjects/>
-            <hr class="mx-auto max-w-5xl border-t border-border" />
+            <SectionDivider/>
             <NewsletterCta tinted={true}/>
         </ResizableLayout>
         <Footer/>
