@@ -1,7 +1,7 @@
 import {Button} from "../ui/button.tsx"
 
 const HomeHero = () => {
-    return <section className="relative h-[90vh] overflow-hidden">
+    return <section className="relative h-[calc(100vh-3.5rem)] overflow-hidden">
         {/*<VideoOrImageBackground/> /!* Devon-style *!/*/}
         <div className="absolute inset-0 bg-black/40"/>
         {/* overlay */}
