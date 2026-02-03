@@ -1,6 +1,7 @@
 import * as React from "react"
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
+
 export function NewsletterCta({tinted = false}: { tinted?: boolean }) {
     const [email, setEmail] = React.useState("")
     const [submitted, setSubmitted] = React.useState(false)
@@ -22,7 +23,8 @@ export function NewsletterCta({tinted = false}: { tinted?: boolean }) {
                 </p>
 
                 {!submitted ? (
-                    <form onSubmit={handleSubmit} className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <form onSubmit={handleSubmit}
+                          className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
                         <Input
                             type="email"
                             placeholder="you@example.com"

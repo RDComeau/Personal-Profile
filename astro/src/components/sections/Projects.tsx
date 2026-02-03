@@ -1,4 +1,5 @@
 import * as React from "react"
+
 type Organization = {
     name: string
     color: string
@@ -25,9 +26,9 @@ const orgColors: Record<string, string> = {
 }
 
 const statusLabels: Record<Project["status"], { label: string; dot: string }> = {
-    "complete": { label: "Complete", dot: "bg-emerald-500" },
-    "in-progress": { label: "In Progress", dot: "bg-amber-500" },
-    "archived": { label: "Archived", dot: "bg-muted-foreground" },
+    "complete": {label: "Complete", dot: "bg-emerald-500"},
+    "in-progress": {label: "In Progress", dot: "bg-amber-500"},
+    "archived": {label: "Archived", dot: "bg-muted-foreground"},
 }
 
 const projects: Project[] = [
@@ -39,7 +40,7 @@ const projects: Project[] = [
         date: "2025-11-15",
         displayDate: "November 15, 2025",
         image: "/images/projects/fleet-analytics-dashboard.png",
-        organization: { name: "Drone Company", color: "blue" },
+        organization: {name: "Drone Company", color: "blue"},
         technologies: ["React", "TypeScript", "D3.js"],
         status: "in-progress",
     },
@@ -51,7 +52,7 @@ const projects: Project[] = [
         date: "2025-10-28",
         displayDate: "October 28, 2025",
         image: "/images/projects/church-event-system.png",
-        organization: { name: "St. Paul's Tentmakers", color: "purple" },
+        organization: {name: "St. Paul's Tentmakers", color: "purple"},
         technologies: ["Astro", "Node.js", "SQLite"],
         status: "complete",
     },
@@ -63,7 +64,7 @@ const projects: Project[] = [
         date: "2025-10-10",
         displayDate: "October 10, 2025",
         image: "/images/projects/ecommerce-api.png",
-        organization: { name: "Dev Shop", color: "green" },
+        organization: {name: "Dev Shop", color: "green"},
         technologies: ["Go", "PostgreSQL", "Redis"],
         status: "complete",
     },
@@ -86,14 +87,14 @@ export function LatestProjects({tinted = false}: { tinted?: boolean }) {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {projects.map((project) => (
-                    <ProjectCard key={project.slug} project={project} />
+                    <ProjectCard key={project.slug} project={project}/>
                 ))}
             </div>
         </section>
     )
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({project}: { project: Project }) {
     const badgeClass = orgColors[project.organization.name] ?? "bg-muted text-muted-foreground"
     const status = statusLabels[project.status]
 
@@ -137,7 +138,7 @@ function ProjectCard({ project }: { project: Project }) {
                 </p>
 
                 <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className={`inline-block h-1.5 w-1.5 rounded-full ${status.dot}`} />
+                    <span className={`inline-block h-1.5 w-1.5 rounded-full ${status.dot}`}/>
                     <span>{status.label}</span>
                     <span>·</span>
                     <time dateTime={project.date}>{project.displayDate}</time>

@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Github, Linkedin, Twitter, Rss} from "lucide-react"
+import {Github, Linkedin, Rss, Twitter} from "lucide-react"
 
 const navItems = [
     {href: "/", label: "Home"},

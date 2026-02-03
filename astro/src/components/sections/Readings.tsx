@@ -1,4 +1,5 @@
 import * as React from "react"
+
 type Reading = {
     slug: string
     title: string
@@ -54,35 +55,38 @@ const BookIcon = () => (
         fill="none"
         viewBox="0 0 24 24"
     >
-        <path d="M2.75 7.21a2 2 0 0 1 2-2H8.5a3.5 3.5 0 0 1 3.5 3.5v10.885l-1.015-.721a4 4 0 0 0-2.318-.74H4.75a2 2 0 0 1-2-2zm18.5 0a2 2 0 0 0-2-2H15.5a3.5 3.5 0 0 0-3.5 3.5v10.885l1.015-.721a4 4 0 0 1 2.317-.74h3.918a2 2 0 0 0 2-2z" />
+        <path
+            d="M2.75 7.21a2 2 0 0 1 2-2H8.5a3.5 3.5 0 0 1 3.5 3.5v10.885l-1.015-.721a4 4 0 0 0-2.318-.74H4.75a2 2 0 0 1-2-2zm18.5 0a2 2 0 0 0-2-2H15.5a3.5 3.5 0 0 0-3.5 3.5v10.885l1.015-.721a4 4 0 0 1 2.317-.74h3.918a2 2 0 0 0 2-2z"/>
     </svg>
 )
 
 export function LatestReadings({tinted = false}: { tinted?: boolean }) {
     return (
-        <section className={`py-16 ${tinted ? "bg-muted/40" : ""}`}><div className="mx-auto max-w-5xl px-4">
-            <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                    Latest Readings
-                </h2>
-                <a
-                    href="/readings"
-                    className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                    Explore all
-                </a>
-            </div>
+        <section className={`py-16 ${tinted ? "bg-muted/40" : ""}`}>
+            <div className="mx-auto max-w-5xl px-4">
+                <div className="mb-6 flex items-center justify-between">
+                    <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                        Latest Readings
+                    </h2>
+                    <a
+                        href="/readings"
+                        className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        Explore all
+                    </a>
+                </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {readings.map((reading) => (
-                    <ReadingCard key={reading.slug} reading={reading} />
-                ))}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {readings.map((reading) => (
+                        <ReadingCard key={reading.slug} reading={reading}/>
+                    ))}
+                </div>
             </div>
-        </div></section>
+        </section>
     )
 }
 
-function ReadingCard({ reading }: { reading: Reading }) {
+function ReadingCard({reading}: { reading: Reading }) {
     return (
         <article
             className="group relative flex flex-col rounded-xl overflow-hidden transition-transform duration-200
@@ -98,7 +102,7 @@ function ReadingCard({ reading }: { reading: Reading }) {
             {/* Reading badge */}
             <div className="absolute top-2 left-2 z-20 flex gap-2 text-[10px] font-medium">
                 <span className="flex items-center gap-1 rounded-full bg-teal-100 px-2 py-0.5 text-teal-800">
-                    <BookIcon />
+                    <BookIcon/>
                     Reading
                 </span>
             </div>

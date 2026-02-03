@@ -1,4 +1,5 @@
 import * as React from "react"
+
 type Podcast = {
     slug: string
     title: string
@@ -50,7 +51,8 @@ const PodcastIcon = () => (
         fill="none"
         viewBox="0 0 24 24"
     >
-        <path d="M8.801 6.449a3.199 3.199 0 1 1 6.398 0v4.95a3.199 3.199 0 0 1-6.398 0zM12 18.181a6.78 6.78 0 0 1-6.779-6.779M12 18.182a6.78 6.78 0 0 0 6.779-6.78M12 18.182v2.568" />
+        <path
+            d="M8.801 6.449a3.199 3.199 0 1 1 6.398 0v4.95a3.199 3.199 0 0 1-6.398 0zM12 18.181a6.78 6.78 0 0 1-6.779-6.779M12 18.182a6.78 6.78 0 0 0 6.779-6.78M12 18.182v2.568"/>
     </svg>
 )
 
@@ -71,14 +73,14 @@ export function LatestPodcasts({tinted = false}: { tinted?: boolean }) {
 
             <div className="flex flex-col gap-3">
                 {podcasts.map((podcast) => (
-                    <PodcastListItem key={podcast.slug} podcast={podcast} />
+                    <PodcastListItem key={podcast.slug} podcast={podcast}/>
                 ))}
             </div>
         </section>
     )
 }
 
-function PodcastListItem({ podcast }: { podcast: Podcast }) {
+function PodcastListItem({podcast}: { podcast: Podcast }) {
     return (
         <article
             className="group relative flex items-start rounded-xl p-2.5 transition-transform duration-200
@@ -94,7 +96,7 @@ function PodcastListItem({ podcast }: { podcast: Podcast }) {
             {/* Podcast badge */}
             <div className="absolute top-2 left-3 z-20 flex gap-2 text-[10px] font-medium">
                 <span className="flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-violet-800">
-                    <PodcastIcon />
+                    <PodcastIcon/>
                     Podcast
                 </span>
             </div>
@@ -124,7 +126,7 @@ function PodcastListItem({ podcast }: { podcast: Podcast }) {
                     <time dateTime={podcast.date}>{podcast.displayDate}</time>
                 </div>
 
-                <hr className="border-t border-border mt-3" />
+                <hr className="border-t border-border mt-3"/>
             </div>
         </article>
     )

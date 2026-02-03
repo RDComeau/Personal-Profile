@@ -1,4 +1,5 @@
 import * as React from "react"
+
 type Article = {
     slug: string
     title: string
@@ -29,26 +30,28 @@ const articles: Article[] = [
 
 export function LatestArticles({tinted = false}: { tinted?: boolean }) {
     return (
-        <section className={`py-12 ${tinted ? "bg-muted/40" : ""}`}><div className="mx-auto max-w-5xl px-4">
-            <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                    Latest Articles
-                </h2>
-                <a
-                    href="/blog"
-                    className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                    See all
-                </a>
-            </div>
+        <section className={`py-12 ${tinted ? "bg-muted/40" : ""}`}>
+            <div className="mx-auto max-w-5xl px-4">
+                <div className="mb-6 flex items-center justify-between">
+                    <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                        Latest Articles
+                    </h2>
+                    <a
+                        href="/blog"
+                        className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        See all
+                    </a>
+                </div>
 
-            {/* slim list layout (replaces the `.latest-posts-section .loops` + `.loop` CSS) */}
-            <div className="flex flex-col gap-3">
-                {articles.map((post) => (
-                    <ArticleListItem key={post.slug} post={post}/>
-                ))}
+                {/* slim list layout (replaces the `.latest-posts-section .loops` + `.loop` CSS) */}
+                <div className="flex flex-col gap-3">
+                    {articles.map((post) => (
+                        <ArticleListItem key={post.slug} post={post}/>
+                    ))}
+                </div>
             </div>
-        </div></section>
+        </section>
     )
 }
 

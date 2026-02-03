@@ -1,5 +1,6 @@
 import * as React from "react"
 import {Button} from "@/components/ui/button"
+
 const socialLinks = [
     {href: "https://github.com/your-handle", label: "GitHub", icon: "icon-square-github"},
     {href: "https://www.linkedin.com/in/your-handle", label: "LinkedIn", icon: "icon-linkedin"},
