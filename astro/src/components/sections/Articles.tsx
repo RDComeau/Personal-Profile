@@ -57,7 +57,7 @@ function ArticleListItem({post}: { post: Article }) {
     return (
         <article
             className="group relative flex items-start rounded-xl p-2.5 transition-transform duration-200
-                       hover:-translate-y-1.5 hover:bg-slate-50 focus-within:shadow-[0_10px_30px_rgba(15,23,42,0.12)]"
+                       hover:-translate-y-1.5 hover:bg-accent focus-within:shadow-md"
             role="article"
         >
             {/* clickable overlay (same behavior as .loop-link) */}
@@ -94,8 +94,8 @@ function ArticleListItem({post}: { post: Article }) {
                     src={post.image}
                     alt={post.title}
                     className="w-full h-full object-cover rounded-[8px] transition-transform duration-300
-                               group-hover:scale-105 shadow-[0_8px_30px_rgba(15,23,42,0.06)]
-                               group-hover:shadow-[0_18px_45px_rgba(15,23,42,0.18)]"
+                               group-hover:scale-105 shadow-sm
+                               group-hover:shadow-lg"
                 />
             </div>
 
@@ -115,7 +115,7 @@ function ArticleListItem({post}: { post: Article }) {
                     <span>{post.readingTime}</span>
                 </div>
 
-                <hr className="border-t border-neutral-200 mt-3"/>
+                <hr className="border-t border-border mt-3"/>
             </div>
         </article>
     )
