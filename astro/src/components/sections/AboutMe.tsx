@@ -1,6 +1,5 @@
 import * as React from "react"
 import {Button} from "@/components/ui/button"
-
 const socialLinks = [
     {href: "https://github.com/your-handle", label: "GitHub", icon: "icon-square-github"},
     {href: "https://www.linkedin.com/in/your-handle", label: "LinkedIn", icon: "icon-linkedin"},
@@ -13,7 +12,7 @@ export default function AboutMe() {
     return (
         <section
             id="about"
-            className="relative py-16 md:py-24"
+            className="relative pt-20 pb-16 md:pt-28 md:pb-24"
         >
             <div className="mx-auto flex max-w-5xl flex-col gap-12 px-4 md:flex-row md:items-center">
                 {/* Left: profile image */}

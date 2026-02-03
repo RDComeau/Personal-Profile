@@ -1,5 +1,4 @@
 import * as React from "react"
-
 type Podcast = {
     slug: string
     title: string

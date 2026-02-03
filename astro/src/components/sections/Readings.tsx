@@ -1,5 +1,4 @@
 import * as React from "react"
-
 type Reading = {
     slug: string
     title: string
@@ -61,7 +60,7 @@ const BookIcon = () => (
 
 export function LatestReadings() {
     return (
-        <section className="mx-auto max-w-5xl px-4 py-12">
+        <section className="bg-muted/40 py-16"><div className="mx-auto max-w-5xl px-4">
             <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     Latest Readings
@@ -79,7 +78,7 @@ export function LatestReadings() {
                     <ReadingCard key={reading.slug} reading={reading} />
                 ))}
             </div>
-        </section>
+        </div></section>
     )
 }
 

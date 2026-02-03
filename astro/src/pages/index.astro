@@ -5,12 +5,11 @@ import {LatestArticles} from '../components/sections/Articles'
 import {LatestPodcasts} from '../components/sections/Podcasts'
 import {LatestReadings} from '../components/sections/Readings'
 import {LatestProjects} from '../components/sections/Projects'
+import {NewsletterCta} from '../components/sections/NewsletterCta'
+import {Footer} from '../components/sections/Footer'
 import Layout from '../layouts/Layout.astro';
 import SiteLayout from "../layouts/SiteLayout";
 import {ResizableLayout} from '../layouts/ResizableLayout'
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
@@ -18,10 +17,17 @@ import {ResizableLayout} from '../layouts/ResizableLayout'
         <HomeHero client:load/>
         <ResizableLayout client:load>
             <AboutMe/>
+            <hr class="mx-auto max-w-5xl border-t border-border" />
             <LatestArticles/>
+            <hr class="border-t border-border" />
             <LatestPodcasts/>
+            <hr class="mx-auto max-w-5xl border-t border-border" />
             <LatestReadings/>
+            <hr class="border-t border-border" />
             <LatestProjects/>
+            <hr class="mx-auto max-w-5xl border-t border-border" />
+            <NewsletterCta/>
         </ResizableLayout>
+        <Footer/>
     </SiteLayout>
 </Layout>

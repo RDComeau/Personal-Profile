@@ -1,5 +1,4 @@
 import * as React from "react"
-
 type Article = {
     slug: string
     title: string
@@ -30,7 +29,7 @@ const articles: Article[] = [
 
 export function LatestArticles() {
     return (
-        <section className="mx-auto max-w-5xl px-4 py-12">
+        <section className="bg-muted/40 py-12"><div className="mx-auto max-w-5xl px-4">
             <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     Latest Articles
@@ -49,7 +48,7 @@ export function LatestArticles() {
                     <ArticleListItem key={post.slug} post={post}/>
                 ))}
             </div>
-        </section>
+        </div></section>
     )
 }
 
