@@ -1,6 +1,18 @@
 import {Button} from "../ui/button.tsx"
+import {useTypingEffect} from "@/hooks/useTypingEffect"
+
+const titles = [
+    "Builder.",
+    "Platform Engineer.",
+    "DevOps Expert.",
+    "Cloud Architect.",
+    "Infrastructure Developer.",
+    "Homestead Enthusiast.",
+]
 
 const HomeHero = () => {
+    const {displayText, isIdle} = useTypingEffect(titles, 100, 75, 2000)
+
     return <section className="relative h-[calc(100vh-3.5rem)] overflow-hidden">
         {/*<VideoOrImageBackground/> /!* Devon-style *!/*/}
         <div className="absolute inset-0 bg-black/40"/>
@@ -13,8 +25,12 @@ const HomeHero = () => {
                 </p>
 
                 <h1 className="text-4xl md:text-6xl font-semibold">
-                    Richard Comeau / <span className="italic">Builder.</span>
+                    Richard Comeau
                 </h1>
+                <p className="text-2xl md:text-4xl font-semibold italic whitespace-nowrap">
+                    {displayText}
+                    <span className={isIdle ? "animate-pulse" : ""}>|</span>
+                </p>
 
                 <p className="text-lg text-muted-foreground max-w-xl mx-auto">
                     Helping teams ship reliable cloud infrastructure, while building a sustainable homestead life.
