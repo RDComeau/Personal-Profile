@@ -30,7 +30,7 @@ export function ResizableLayout({children}: { children: React.ReactNode }) {
 
             {/* Sidebar drawer — fixed to viewport so it scrolls with you */}
             <aside
-                className={`fixed left-0 top-14 z-50 h-[calc(100vh-3.5rem)] w-72 overflow-y-auto
+                className={`fixed left-0 top-0 z-50 h-screen w-72 overflow-y-auto
                            bg-background border-r border-border shadow-lg
                            transition-transform duration-300 ease-in-out
                            ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
