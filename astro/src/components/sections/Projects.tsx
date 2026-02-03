@@ -69,9 +69,9 @@ const projects: Project[] = [
     },
 ]
 
-export function LatestProjects() {
+export function LatestProjects({tinted = false}: { tinted?: boolean }) {
     return (
-        <section className="mx-auto max-w-5xl px-4 py-16">
+        <section className={`mx-auto max-w-5xl px-4 py-16 ${tinted ? "bg-muted/40" : ""}`}>
             <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     Latest Projects

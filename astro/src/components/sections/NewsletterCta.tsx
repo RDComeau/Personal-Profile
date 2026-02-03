@@ -1,7 +1,7 @@
 import * as React from "react"
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
-export function NewsletterCta() {
+export function NewsletterCta({tinted = false}: { tinted?: boolean }) {
     const [email, setEmail] = React.useState("")
     const [submitted, setSubmitted] = React.useState(false)
 
@@ -11,7 +11,7 @@ export function NewsletterCta() {
     }
 
     return (
-        <section className="bg-muted/40 py-16">
+        <section className={`py-16 ${tinted ? "bg-muted/40" : ""}`}>
             <div className="mx-auto max-w-2xl px-4 text-center">
                 <h2 className="text-2xl md:text-3xl font-semibold">
                     Stay in the loop

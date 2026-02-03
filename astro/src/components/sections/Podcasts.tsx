@@ -54,9 +54,9 @@ const PodcastIcon = () => (
     </svg>
 )
 
-export function LatestPodcasts() {
+export function LatestPodcasts({tinted = false}: { tinted?: boolean }) {
     return (
-        <section className="mx-auto max-w-5xl px-4 py-12">
+        <section className={`mx-auto max-w-5xl px-4 py-12 ${tinted ? "bg-muted/40" : ""}`}>
             <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     Latest Podcasts

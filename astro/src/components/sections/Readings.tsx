@@ -58,9 +58,9 @@ const BookIcon = () => (
     </svg>
 )
 
-export function LatestReadings() {
+export function LatestReadings({tinted = false}: { tinted?: boolean }) {
     return (
-        <section className="bg-muted/40 py-16"><div className="mx-auto max-w-5xl px-4">
+        <section className={`py-16 ${tinted ? "bg-muted/40" : ""}`}><div className="mx-auto max-w-5xl px-4">
             <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     Latest Readings
