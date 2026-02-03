@@ -1,46 +1,62 @@
-# Astro Starter Kit: Basics
+# Personal Profile
 
-```sh
-yarn create astro@latest -- --template basics
+A personal portfolio and profile site for Richard Comeau — Senior Cloud & DevOps Engineer. Built with Astro, React, and Tailwind CSS.
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18+)
+- [Yarn](https://yarnpkg.com/) package manager
+
+## Getting Started
+
+```bash
+make dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+This installs dependencies and starts the dev server at `http://localhost:4321`.
 
-## 🚀 Project Structure
+## Makefile
 
-Inside of your Astro project, you'll see the following folders and files:
+All common tasks are available through the Makefile:
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+| Command         | What it does                                      |
+| :-------------- | :------------------------------------------------ |
+| `make help`     | List all available targets                        |
+| `make install`  | Install dependencies (`yarn install`)             |
+| `make dev`      | Install deps + start dev server at localhost:4321 |
+| `make build`    | Install deps + production build to `dist/`        |
+| `make preview`  | Install deps + preview the production build       |
+| `make clean`    | Remove `dist/` build artifacts                    |
+
+The `YARN` variable can be overridden if needed: `make dev YARN=npx yarn`.
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── sections/     # Page content sections (HomeHero, AboutMe, Articles, etc.)
+│   └── ui/           # Reusable UI primitives (Button, Input, etc.)
+├── hooks/            # Custom React hooks (useTypingEffect, etc.)
+├── layouts/          # Page layout wrappers (Layout.astro, SiteLayout, ResizableLayout)
+├── lib/              # Utility functions (cn helper)
+├── pages/            # File-based routing (index.astro, profile.astro)
+└── styles/           # Global CSS and theme definitions
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Tech Stack
 
-## 🧞 Commands
+- **Astro v5** — Static site generation with file-based routing
+- **React 19** — Interactive UI components via Astro's island architecture
+- **Tailwind CSS v4** — Utility-first styling with OKLCH color theming
+- **TypeScript** — Type safety for React components
+- **Lucide React** — Icon library
+- **Radix UI** — Accessible component primitives
+- **class-variance-authority** — Type-safe component variants (shadcn/ui pattern)
 
-All commands are run from the root of the project, from a terminal:
+## Things Worth Considering
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `yarn install`             | Installs dependencies                            |
-| `yarn dev`             | Starts local dev server at `localhost:4321`      |
-| `yarn build`           | Build your production site to `./dist/`          |
-| `yarn preview`         | Preview your build locally, before deploying     |
-| `yarn astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `yarn astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- **Astro island hydration:** React components in `.astro` files are server-rendered by default. Any component using client-side state (`useState`, `useEffect`, event handlers) must have a `client:load` or `client:idle` directive to ship JavaScript to the browser.
+- **Theming:** All color tokens are defined in `src/styles/global.css` using CSS custom properties. Use theme token classes (`bg-background`, `text-muted-foreground`, `border-border`, etc.) for structural colors. Reserve hardcoded palette colors (e.g., `bg-amber-100`) only for intentional semantic accents like badges.
+- **No linting or testing** is currently configured.
+- **Local notes:** Files matching `*.local.md` are gitignored for personal reference that shouldn't be committed.
