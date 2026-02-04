@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro'
+import SiteLayout from '../layouts/SiteLayout'
+import { Footer } from '../components/sections/Footer'
+import { ContactPage } from '../components/contact/ContactPage'
+---
+
+<Layout>
+    <SiteLayout>
+        <ContactPage client:load/>
+        <Footer/>
+    </SiteLayout>
+</Layout>

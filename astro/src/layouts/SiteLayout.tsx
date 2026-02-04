@@ -3,8 +3,8 @@ import * as React from "react"
 const navItems = [
     {href: "/", label: "Home"},
     {href: "/about", label: "About"},
-    {href: "/projects", label: "Projects"},
     {href: "/blog", label: "Blog"},
+    {href: "/contact", label: "Contact"},
 ]
 
 export default function SiteLayout({children}: { children: React.ReactNode }) {

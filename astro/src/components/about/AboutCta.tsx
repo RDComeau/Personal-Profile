@@ -13,7 +13,7 @@ export function AboutCta() {
                 </p>
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                     <Button size="lg" asChild>
-                        <a href="mailto:your-email@example.com">Get in touch</a>
+                        <a href="/contact">Get in touch</a>
                     </Button>
                     <Button variant="outline" size="lg" asChild>
                         <a href="/blog">Read the blog</a>
