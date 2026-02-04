@@ -11,6 +11,12 @@ import Layout from '../layouts/Layout.astro';
 import SiteLayout from "../layouts/SiteLayout";
 import {ResizableLayout} from '../layouts/ResizableLayout'
 import {SectionDivider} from '../components/ui/section-divider'
+import {getLatestByMedium} from '../lib/content'
+
+const latestArticles = getLatestByMedium("article", 3)
+const latestPodcasts = getLatestByMedium("podcast", 3)
+const latestReadings = getLatestByMedium("reading", 3)
+const latestProjects = getLatestByMedium("project", 3)
 ---
 
 <Layout>
@@ -19,13 +25,13 @@ import {SectionDivider} from '../components/ui/section-divider'
         <ResizableLayout client:load>
             <AboutMe/>
             <SectionDivider/>
-            <LatestArticles tinted={true}/>
+            <LatestArticles tinted={true} items={latestArticles}/>
             <SectionDivider/>
-            <LatestPodcasts/>
+            <LatestPodcasts items={latestPodcasts}/>
             <SectionDivider/>
-            <LatestReadings tinted={true}/>
+            <LatestReadings tinted={true} items={latestReadings}/>
             <SectionDivider/>
-            <LatestProjects/>
+            <LatestProjects items={latestProjects}/>
             <SectionDivider/>
             <NewsletterCta tinted={true}/>
         </ResizableLayout>

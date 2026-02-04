@@ -5,9 +5,9 @@ import {Briefcase, FileText, Home, Mail, Mic, Palette, Sparkles, Tag, Users,} fr
 
 const navigationItems = [
     {href: "/", label: "Home", icon: Home, count: null},
-    {href: "/blog", label: "Articles", icon: FileText, count: 12},
-    {href: "/podcasts", label: "Podcasts", icon: Mic, count: 10},
-    {href: "/projects", label: "Projects", icon: Briefcase, count: 3},
+    {href: "/blog?type=article", label: "Articles", icon: FileText, count: 12},
+    {href: "/blog?type=podcast", label: "Podcasts", icon: Mic, count: 10},
+    {href: "/blog?type=project", label: "Projects", icon: Briefcase, count: 3},
 ]
 
 const themeItems = [

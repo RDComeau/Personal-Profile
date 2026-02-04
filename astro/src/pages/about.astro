@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro'
+import SiteLayout from '../layouts/SiteLayout'
+import { Footer } from '../components/sections/Footer'
+import { AboutHero } from '../components/about/AboutHero'
+import { AboutJourney } from '../components/about/AboutJourney'
+import { AboutTimeline } from '../components/about/AboutTimeline'
+import { AboutSkills } from '../components/about/AboutSkills'
+import { AboutPersonal } from '../components/about/AboutPersonal'
+import { AboutCta } from '../components/about/AboutCta'
+import { roles, skillCategories, personalInterests } from '../lib/about'
+---
+
+<Layout>
+    <SiteLayout>
+        <AboutHero/>
+        <AboutJourney/>
+        <AboutTimeline roles={roles}/>
+        <AboutSkills categories={skillCategories}/>
+        <AboutPersonal interests={personalInterests}/>
+        <AboutCta/>
+        <Footer/>
+    </SiteLayout>
+</Layout>

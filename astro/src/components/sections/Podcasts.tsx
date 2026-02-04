@@ -1,43 +1,5 @@
 import * as React from "react"
-
-type Podcast = {
-    slug: string
-    title: string
-    excerpt: string
-    date: string
-    displayDate: string
-    image: string
-}
-
-const podcasts: Podcast[] = [
-    {
-        slug: "why-clean-code-still-matters-most",
-        title: "Why Clean Code Still Matters Most",
-        excerpt:
-            "Clean code isn't outdated—it's what keeps teams moving forward.",
-        date: "2025-11-10",
-        displayDate: "November 10, 2025",
-        image: "/images/podcasts/why-clean-code-still-matters-most.png",
-    },
-    {
-        slug: "building-smarter-tools-for-daily-workflows",
-        title: "Building Smarter Tools for Daily Workflows",
-        excerpt:
-            "Small tools can drastically improve how we work every day.",
-        date: "2025-11-05",
-        displayDate: "November 05, 2025",
-        image: "/images/podcasts/building-smarter-tools-for-daily-workflows.png",
-    },
-    {
-        slug: "what-makes-a-framework-truly-powerful",
-        title: "What Makes a Framework Truly Powerful",
-        excerpt:
-            "A powerful framework changes how you think, not just what you build.",
-        date: "2025-10-30",
-        displayDate: "October 30, 2025",
-        image: "/images/podcasts/what-makes-a-framework-truly-powerful.png",
-    },
-]
+import type { ContentItem } from "@/lib/content"
 
 const PodcastIcon = () => (
     <svg
@@ -56,7 +18,7 @@ const PodcastIcon = () => (
     </svg>
 )
 
-export function LatestPodcasts({tinted = false}: { tinted?: boolean }) {
+export function LatestPodcasts({ tinted = false, items = [] }: { tinted?: boolean; items?: ContentItem[] }) {
     return (
         <section className={`mx-auto max-w-5xl px-4 py-12 ${tinted ? "bg-muted/40" : ""}`}>
             <div className="mb-6 flex items-center justify-between">
@@ -64,7 +26,7 @@ export function LatestPodcasts({tinted = false}: { tinted?: boolean }) {
                     Latest Podcasts
                 </h2>
                 <a
-                    href="/podcasts"
+                    href="/blog?type=podcast"
                     className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
                 >
                     Listen to all
@@ -72,7 +34,7 @@ export function LatestPodcasts({tinted = false}: { tinted?: boolean }) {
             </div>
 
             <div className="flex flex-col gap-3">
-                {podcasts.map((podcast) => (
+                {items.map((podcast) => (
                     <PodcastListItem key={podcast.slug} podcast={podcast}/>
                 ))}
             </div>
@@ -80,7 +42,7 @@ export function LatestPodcasts({tinted = false}: { tinted?: boolean }) {
     )
 }
 
-function PodcastListItem({podcast}: { podcast: Podcast }) {
+function PodcastListItem({ podcast }: { podcast: ContentItem }) {
     return (
         <article
             className="group relative flex items-start rounded-xl p-2.5 transition-transform duration-200
@@ -89,11 +51,10 @@ function PodcastListItem({podcast}: { podcast: Podcast }) {
         >
             <a
                 className="absolute inset-0 z-10"
-                href={`/podcasts/${podcast.slug}`}
+                href={`/blog/${podcast.slug}`}
                 aria-label={podcast.title}
             />
 
-            {/* Podcast badge */}
             <div className="absolute top-2 left-3 z-20 flex gap-2 text-[10px] font-medium">
                 <span className="flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-violet-800">
                     <PodcastIcon/>
@@ -101,7 +62,6 @@ function PodcastListItem({podcast}: { podcast: Podcast }) {
                 </span>
             </div>
 
-            {/* Thumbnail */}
             <div className="flex-none w-24 h-16 mr-3 rounded-[10px] overflow-hidden">
                 <img
                     src={podcast.image}
@@ -112,7 +72,6 @@ function PodcastListItem({podcast}: { podcast: Podcast }) {
                 />
             </div>
 
-            {/* Content */}
             <div className="flex-1 min-w-0">
                 <h3 className="text-base font-semibold leading-snug group-hover:text-foreground truncate">
                     {podcast.title}
@@ -124,6 +83,12 @@ function PodcastListItem({podcast}: { podcast: Podcast }) {
 
                 <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
                     <time dateTime={podcast.date}>{podcast.displayDate}</time>
+                    {podcast.duration && (
+                        <>
+                            <span>·</span>
+                            <span>{podcast.duration}</span>
+                        </>
+                    )}
                 </div>
 
                 <hr className="border-t border-border mt-3"/>

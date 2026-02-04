@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro'
+import SiteLayout from '../layouts/SiteLayout'
+import { Footer } from '../components/sections/Footer'
+import { BlogLayout } from '../components/blog/BlogLayout'
+import { getAllContent } from '../lib/content'
+
+const allContent = getAllContent()
+---
+
+<Layout>
+    <SiteLayout>
+        <BlogLayout client:load allContent={allContent}/>
+        <Footer/>
+    </SiteLayout>
+</Layout>

@@ -1,47 +1,5 @@
 import * as React from "react"
-
-type Reading = {
-    slug: string
-    title: string
-    author: string
-    excerpt: string
-    date: string
-    displayDate: string
-    image: string
-}
-
-const readings: Reading[] = [
-    {
-        slug: "bloom-where-the-sparks-fall",
-        title: "Bloom Where the Sparks Fall",
-        author: "Nira Callaway",
-        excerpt:
-            "A vivid, high-energy novel about fleeting brilliance, emotional aftershocks, and the courage to rebuild in the glow of what's been shattered.",
-        date: "2025-11-11",
-        displayDate: "November 11, 2025",
-        image: "/images/readings/bloom-where-the-sparks-fall.png",
-    },
-    {
-        slug: "the-starglass-constellation",
-        title: "The Starglass Constellation",
-        author: "Elira Thornveil",
-        excerpt:
-            "A luminous tale of living constellations, fragile magic, and the courage it takes to rewrite the sky's forgotten stories.",
-        date: "2025-11-04",
-        displayDate: "November 04, 2025",
-        image: "/images/readings/the-starglass-constellation.png",
-    },
-    {
-        slug: "salt-in-the-shape-of-wings",
-        title: "Salt in the Shape of Wings",
-        author: "Mirella Arden",
-        excerpt:
-            "A lyrical ocean-bound meditation on belonging, memory, and the quiet courage of returning to oneself—told with drifting, tidal grace.",
-        date: "2025-10-07",
-        displayDate: "October 07, 2025",
-        image: "/images/readings/salt-in-the-shape-of-wings.png",
-    },
-]
+import type { ContentItem } from "@/lib/content"
 
 const BookIcon = () => (
     <svg
@@ -60,7 +18,7 @@ const BookIcon = () => (
     </svg>
 )
 
-export function LatestReadings({tinted = false}: { tinted?: boolean }) {
+export function LatestReadings({ tinted = false, items = [] }: { tinted?: boolean; items?: ContentItem[] }) {
     return (
         <section className={`py-16 ${tinted ? "bg-muted/40" : ""}`}>
             <div className="mx-auto max-w-5xl px-4">
@@ -69,7 +27,7 @@ export function LatestReadings({tinted = false}: { tinted?: boolean }) {
                         Latest Readings
                     </h2>
                     <a
-                        href="/readings"
+                        href="/blog?type=reading"
                         className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
                     >
                         Explore all
@@ -77,7 +35,7 @@ export function LatestReadings({tinted = false}: { tinted?: boolean }) {
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {readings.map((reading) => (
+                    {items.map((reading) => (
                         <ReadingCard key={reading.slug} reading={reading}/>
                     ))}
                 </div>
@@ -86,7 +44,7 @@ export function LatestReadings({tinted = false}: { tinted?: boolean }) {
     )
 }
 
-function ReadingCard({reading}: { reading: Reading }) {
+function ReadingCard({ reading }: { reading: ContentItem }) {
     return (
         <article
             className="group relative flex flex-col rounded-xl overflow-hidden transition-transform duration-200
@@ -95,11 +53,10 @@ function ReadingCard({reading}: { reading: Reading }) {
         >
             <a
                 className="absolute inset-0 z-10"
-                href={`/readings/${reading.slug}`}
+                href={`/blog/${reading.slug}`}
                 aria-label={reading.title}
             />
 
-            {/* Reading badge */}
             <div className="absolute top-2 left-2 z-20 flex gap-2 text-[10px] font-medium">
                 <span className="flex items-center gap-1 rounded-full bg-teal-100 px-2 py-0.5 text-teal-800">
                     <BookIcon/>
@@ -107,7 +64,6 @@ function ReadingCard({reading}: { reading: Reading }) {
                 </span>
             </div>
 
-            {/* Cover image */}
             <div className="aspect-[4/3] w-full overflow-hidden">
                 <img
                     src={reading.image}
@@ -117,11 +73,12 @@ function ReadingCard({reading}: { reading: Reading }) {
                 />
             </div>
 
-            {/* Content */}
             <div className="flex flex-1 flex-col p-4">
-                <span className="text-xs font-medium text-muted-foreground">
-                    {reading.author}
-                </span>
+                {reading.author && (
+                    <span className="text-xs font-medium text-muted-foreground">
+                        {reading.author}
+                    </span>
+                )}
 
                 <h3 className="mt-1 text-base font-semibold leading-snug group-hover:text-foreground">
                     {reading.title}

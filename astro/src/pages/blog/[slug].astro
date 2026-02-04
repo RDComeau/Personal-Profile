@@ -1,0 +1,138 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import SiteLayout from '../../layouts/SiteLayout'
+import { Footer } from '../../components/sections/Footer'
+import { getAllSlugs, getContentBySlug, getOrgColorClass } from '../../lib/content'
+
+export function getStaticPaths() {
+    return getAllSlugs().map((slug) => ({ params: { slug } }))
+}
+
+const { slug } = Astro.params
+const item = getContentBySlug(slug!)
+
+if (!item) {
+    return Astro.redirect('/blog')
+}
+
+const mediumLabels: Record<string, { label: string; className: string }> = {
+    article: { label: "Article", className: "bg-sky-100 text-sky-800" },
+    podcast: { label: "Podcast", className: "bg-violet-100 text-violet-800" },
+    reading: { label: "Reading", className: "bg-teal-100 text-teal-800" },
+    project: { label: "Project", className: "bg-orange-100 text-orange-800" },
+}
+
+const badge = mediumLabels[item.medium]
+const orgClass = item.organization ? getOrgColorClass(item.organization) : null
+
+const statusLabels: Record<string, { label: string; dot: string }> = {
+    complete: { label: "Complete", dot: "bg-emerald-500" },
+    "in-progress": { label: "In Progress", dot: "bg-amber-500" },
+    archived: { label: "Archived", dot: "bg-muted-foreground" },
+}
+const status = item.status ? statusLabels[item.status] : null
+---
+
+<Layout>
+    <SiteLayout>
+        <article class="mx-auto max-w-3xl px-4 py-12">
+            <!-- Back link -->
+            <a
+                href="/blog"
+                class="mb-8 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to blog
+            </a>
+
+            <!-- Badges -->
+            <div class="mb-4 flex flex-wrap gap-2 text-xs font-medium">
+                <span class={`rounded-full px-2.5 py-1 ${badge.className}`}>
+                    {badge.label}
+                </span>
+                {item.organization && orgClass && (
+                    <span class={`rounded-full px-2.5 py-1 ${orgClass}`}>
+                        {item.organization}
+                    </span>
+                )}
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-3xl font-bold leading-tight sm:text-4xl">
+                {item.title}
+            </h1>
+
+            <!-- Meta -->
+            <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                {item.author && <span>by {item.author}</span>}
+                <time datetime={item.date}>{item.displayDate}</time>
+                {item.readingTime && <span>· {item.readingTime}</span>}
+                {item.duration && <span>· {item.duration}</span>}
+                {status && (
+                    <span class="flex items-center gap-1">
+                        · <span class={`inline-block h-2 w-2 rounded-full ${status.dot}`}></span>
+                        {status.label}
+                    </span>
+                )}
+            </div>
+
+            <!-- Hero image -->
+            <div class="mt-8 aspect-[16/9] w-full overflow-hidden rounded-xl bg-muted">
+                <img
+                    src={item.image}
+                    alt={item.title}
+                    class="h-full w-full object-cover"
+                />
+            </div>
+
+            <!-- Excerpt / body placeholder -->
+            <div class="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+                <p class="text-lg leading-relaxed text-muted-foreground">
+                    {item.excerpt}
+                </p>
+                <p class="mt-6 text-muted-foreground italic">
+                    Full content coming soon. This page will be powered by Ghost CMS.
+                </p>
+            </div>
+
+            <!-- Technologies (projects) -->
+            {item.technologies && item.technologies.length > 0 && (
+                <div class="mt-8">
+                    <h2 class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                        Technologies
+                    </h2>
+                    <div class="flex flex-wrap gap-2">
+                        {item.technologies.map((tech) => (
+                            <span class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+                                {tech}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <!-- Tags -->
+            {item.tags && item.tags.length > 0 && (
+                <div class="mt-6">
+                    <h2 class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                        Tags
+                    </h2>
+                    <div class="flex flex-wrap gap-2">
+                        {item.tags.map((tag) => (
+                            <a
+                                href={`/blog?tag=${tag}`}
+                                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground
+                                       hover:border-foreground hover:text-foreground transition-colors"
+                            >
+                                {tag}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </article>
+        <Footer/>
+    </SiteLayout>
+</Layout>
