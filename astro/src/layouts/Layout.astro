@@ -1,5 +1,15 @@
 ---
 import "../styles/global.css";
+
+type Props = {
+    title?: string
+    canonicalUrl?: string
+}
+
+const siteName = "Richard Comeau"
+const { title, canonicalUrl } = Astro.props
+const pageTitle = title ? `${title} | ${siteName}` : siteName
+const canonical = canonicalUrl ?? Astro.url.href
 ---
 
 <!doctype html>
@@ -9,8 +19,9 @@ import "../styles/global.css";
     <meta name="viewport" content="width=device-width"/>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
     <link rel="icon" href="/favicon.ico"/>
+    <link rel="canonical" href={canonical}/>
     <meta name="generator" content={Astro.generator}/>
-    <title>Astro Basics</title>
+    <title>{pageTitle}</title>
 </head>
 <body>
 <slot/>

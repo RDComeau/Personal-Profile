@@ -8,7 +8,7 @@ import { getAllContent } from '../lib/content'
 const allContent = await getAllContent()
 ---
 
-<Layout>
+<Layout title="Blog">
     <SiteLayout>
         <BlogLayout client:load allContent={allContent}/>
         <Footer/>

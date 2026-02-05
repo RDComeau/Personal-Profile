@@ -34,7 +34,7 @@ const statusLabels: Record<string, { label: string; dot: string }> = {
 const status = item.status ? statusLabels[item.status] : null
 ---
 
-<Layout>
+<Layout title={item.title} canonicalUrl={item.canonicalUrl}>
     <SiteLayout>
         <article class="mx-auto max-w-3xl px-4 py-12">
             <!-- Back link -->
