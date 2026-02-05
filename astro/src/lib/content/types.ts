@@ -29,6 +29,11 @@ export type ContentItem = {
     // Taxonomy
     categories?: string[]
     tags?: string[]
+
+    // Ghost CMS fields
+    htmlContent?: string
+    canonicalUrl?: string
+    project?: string
 }
 
 export type BlogFilters = {

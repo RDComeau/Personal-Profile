@@ -1,23 +1,37 @@
 import type { ContentItem, Medium, BlogFilters } from "./types"
-import { content } from "./mock-data"
+import { fetchAllGhostPosts } from "./ghost-client"
+import { normalizeGhostPosts } from "./normalize"
+
+let _contentCache: ContentItem[] | null = null
+
+async function getContent(): Promise<ContentItem[]> {
+    if (_contentCache) return _contentCache
+    const posts = await fetchAllGhostPosts()
+    _contentCache = normalizeGhostPosts(posts)
+    return _contentCache
+}
 
 function sortByDate(items: ContentItem[]): ContentItem[] {
     return [...items].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
-export function getAllContent(): ContentItem[] {
+export async function getAllContent(): Promise<ContentItem[]> {
+    const content = await getContent()
     return sortByDate(content)
 }
 
-export function getLatestByMedium(medium: Medium, limit = 3): ContentItem[] {
+export async function getLatestByMedium(medium: Medium, limit = 3): Promise<ContentItem[]> {
+    const content = await getContent()
     return sortByDate(content.filter((item) => item.medium === medium)).slice(0, limit)
 }
 
-export function getContentBySlug(slug: string): ContentItem | undefined {
+export async function getContentBySlug(slug: string): Promise<ContentItem | undefined> {
+    const content = await getContent()
     return content.find((item) => item.slug === slug)
 }
 
-export function getAllSlugs(): string[] {
+export async function getAllSlugs(): Promise<string[]> {
+    const content = await getContent()
     return content.map((item) => item.slug)
 }
 

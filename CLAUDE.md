@@ -104,11 +104,30 @@ Future services (admin dashboard, database with SQL migrations, etc.) should:
 5. Get corresponding targets in the root Makefile
 6. Get a route entry in the centralized Caddy project
 
+## Content Taxonomy
+
+See `CONTENT_TAXONOMY.md` at the project root for the full tagging convention that bridges Ghost CMS and Astro.
+
+Key concepts:
+- Ghost internal tags (`#` prefix) encode metadata: `#org-*`, `#cat-*`, `#medium-*`, `#project-*`, `#status-*`
+- Regular Ghost tags are technology/topic tags (React, Kubernetes, etc.)
+- The Astro normalization layer parses prefixes and maps to `ContentItem` fields
+- Projects use individual posts with a `#project-*` umbrella tag for timeline tracking
+
 ## Cross-Cutting Roadmap
 
 Features that span multiple services or directories:
 
-- [ ] **Ghost → Astro SSG integration** — Build the content normalization layer and SSG adapter to replace mock data with Ghost Content API calls at build time
+### Ghost → Astro SSG Integration (Phased)
+
+- [ ] **Phase 1: Ghost API client + normalization layer** — Create Ghost Content API client, build normalization layer that parses `#org-*`, `#cat-*`, `#medium-*`, `#project-*`, `#status-*` tag prefixes into `ContentItem` fields. Replace mock data import in adapter.ts. Add env config for API URL + key. Runs at Astro build time (SSG).
+- [ ] **Phase 2: Empty state handling** — Home page sections show "Coming Soon!" when no content of that medium exists. Blog page can remain blank for missing content types.
+- [ ] **Phase 3: SEO canonical URLs** — Add `canonicalUrl` field to `ContentItem`. Map Ghost's `canonical_url` field. Render `<link rel="canonical">` in page head. For org-sourced content, canonical points to the originating org's site to avoid duplicate content penalties.
+- [ ] **Phase 4: Multi-org API aggregation** — Astro fetches from multiple Ghost CMS instances at build time (one per org). Config for multiple Ghost endpoints (URL + API key per org). Normalization layer merges content across sources. Canonical URLs auto-set to the source org's URL.
+- [ ] **Phase 5: External content sources (RSS/API)** — Bring in content from external platforms (Medium, Hashnode, etc.) via RSS feeds or APIs. Normalize into the same `ContentItem` type. Canonical URLs point to the original platform. Allows writing on other sites while aggregating everything into the personal profile.
+
+### Other
+
 - [ ] **Admin dashboard** — Separate service for managing content, configuration, and analytics
 - [ ] **Database SQL migrations** — Migration scripts and tooling for schema management
 - [ ] **CI/CD pipeline** — Automated build, test, and deploy workflow

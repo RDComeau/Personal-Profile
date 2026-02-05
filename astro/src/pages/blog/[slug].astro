@@ -4,12 +4,13 @@ import SiteLayout from '../../layouts/SiteLayout'
 import { Footer } from '../../components/sections/Footer'
 import { getAllSlugs, getContentBySlug, getOrgColorClass } from '../../lib/content'
 
-export function getStaticPaths() {
-    return getAllSlugs().map((slug) => ({ params: { slug } }))
+export async function getStaticPaths() {
+    const slugs = await getAllSlugs()
+    return slugs.map((slug) => ({ params: { slug } }))
 }
 
 const { slug } = Astro.params
-const item = getContentBySlug(slug!)
+const item = await getContentBySlug(slug!)
 
 if (!item) {
     return Astro.redirect('/blog')
@@ -87,14 +88,15 @@ const status = item.status ? statusLabels[item.status] : null
                 />
             </div>
 
-            <!-- Excerpt / body placeholder -->
+            <!-- Content -->
             <div class="prose prose-neutral mt-8 max-w-none dark:prose-invert">
-                <p class="text-lg leading-relaxed text-muted-foreground">
-                    {item.excerpt}
-                </p>
-                <p class="mt-6 text-muted-foreground italic">
-                    Full content coming soon. This page will be powered by Ghost CMS.
-                </p>
+                {item.htmlContent ? (
+                    <Fragment set:html={item.htmlContent} />
+                ) : (
+                    <p class="text-lg leading-relaxed text-muted-foreground">
+                        {item.excerpt}
+                    </p>
+                )}
             </div>
 
             <!-- Technologies (projects) -->

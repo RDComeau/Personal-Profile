@@ -109,10 +109,17 @@ Defined entirely in `src/styles/global.css` using Tailwind v4's `@theme` directi
 
 ## Roadmap
 
-- [ ] **Ghost Content API adapter** — Replace mock data in `src/lib/content/adapter.ts` with Ghost Content API calls; normalize Ghost response to existing `ContentItem` type
-- [ ] **Content normalization layer** — Map Ghost's tag taxonomy, authors, and post metadata to Astro's content types (`Medium`, organizations, categories, tags)
-- [ ] **SSG build integration** — Wire up `getStaticPaths` in `blog/[slug].astro` to fetch from Ghost at build time instead of mock data
-- [ ] **Blog post page styling** — Design and implement the individual blog post template (`blog/[slug].astro`) for Ghost-sourced content
+### Ghost SSG Integration (see root CLAUDE.md for cross-cutting phases)
+
+- [ ] **Phase 1: Ghost API client + normalization** — Create `src/lib/content/ghost-client.ts` (fetch from Ghost Content API), create `src/lib/content/normalize.ts` (parse `#org-*`, `#cat-*`, `#medium-*`, `#project-*`, `#status-*` tags into `ContentItem` fields). Update `adapter.ts` to call Ghost instead of importing mock data. Add env config for `GHOST_URL` and `GHOST_CONTENT_API_KEY`.
+- [ ] **Phase 2: Empty state handling** — Home page sections (`Articles`, `Podcasts`, `Readings`, `Projects`) show "Coming Soon!" when `items` array is empty. Blog page can remain blank.
+- [ ] **Phase 3: SEO canonical URLs** — Add `canonicalUrl` to `ContentItem` type. Map from Ghost's `canonical_url`. Render `<link rel="canonical">` in `Layout.astro`. For cross-org content, canonical points to the originating org's site.
+- [ ] **Phase 4: Multi-org aggregation** — Fetch from multiple Ghost instances at build time. Config array of `{ name, url, apiKey }` endpoints. Merge + deduplicate content. Auto-set canonical URLs to source org.
+- [ ] **Phase 5: External content sources (RSS/API)** — Fetch content from external platforms (Medium, Hashnode, etc.) via RSS feeds or public APIs. Normalize into `ContentItem` type alongside Ghost content. Canonical URLs point to the original platform URL. Adapter config supports a list of `{ name, type: "rss" | "api", url }` sources.
+- [ ] **Blog post page with Ghost HTML** — Render Ghost's `html` field in `blog/[slug].astro` instead of excerpt placeholder. Style Ghost HTML output with Tailwind prose classes.
+
+### Other Features
+
 - [ ] **Dark mode toggle** — Add user-facing theme switcher (CSS custom properties already support `.dark` selector)
 - [ ] **Newsletter integration** — Connect newsletter signup forms to an actual email service
 - [ ] **SEO and meta tags** — Add Open Graph, Twitter Card, and structured data to all pages

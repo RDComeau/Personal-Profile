@@ -13,10 +13,10 @@ import {ResizableLayout} from '../layouts/ResizableLayout'
 import {SectionDivider} from '../components/ui/section-divider'
 import {getLatestByMedium} from '../lib/content'
 
-const latestArticles = getLatestByMedium("article", 3)
-const latestPodcasts = getLatestByMedium("podcast", 3)
-const latestReadings = getLatestByMedium("reading", 3)
-const latestProjects = getLatestByMedium("project", 3)
+const latestArticles = await getLatestByMedium("article", 3)
+const latestPodcasts = await getLatestByMedium("podcast", 3)
+const latestReadings = await getLatestByMedium("reading", 3)
+const latestProjects = await getLatestByMedium("project", 3)
 ---
 
 <Layout>
