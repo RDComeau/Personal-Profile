@@ -26,7 +26,7 @@ export function AboutHero() {
                 {/* Right: intro */}
                 <div className="md:w-7/12 space-y-6">
                     <div className="space-y-4">
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                        <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-foreground md:text-left">
                             About me
                         </p>
                         <h1 className="text-3xl md:text-4xl font-semibold leading-tight">

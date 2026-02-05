@@ -32,7 +32,7 @@ export function AboutPersonal({ interests }: { interests: PersonalInterest[] }) 
     return (
         <section className="py-16">
             <div className="mx-auto max-w-4xl px-4">
-                <h2 className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                <h2 className="mb-3 text-center text-sm font-bold uppercase tracking-[0.2em] text-foreground">
                     Beyond the Code
                 </h2>
                 <p className="mb-10 text-sm text-muted-foreground max-w-2xl">

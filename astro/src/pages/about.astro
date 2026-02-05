@@ -15,7 +15,7 @@ import { roles, skillCategories, personalInterests } from '../lib/about'
     <SiteLayout>
         <AboutHero/>
         <AboutJourney/>
-        <AboutTimeline roles={roles}/>
+        <AboutTimeline client:load roles={roles}/>
         <AboutSkills categories={skillCategories}/>
         <AboutPersonal interests={personalInterests}/>
         <AboutCta/>

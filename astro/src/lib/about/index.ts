@@ -1,2 +1,2 @@
-export type { Role, SkillCategory, PersonalInterest } from "./types"
-export { roles, skillCategories, personalInterests } from "./data"
+export type { Role, RoleType, SkillCategory, PersonalInterest, CompanyDef } from "./types"
+export { roles, skillCategories, personalInterests, companyColors, typeLabels } from "./data"

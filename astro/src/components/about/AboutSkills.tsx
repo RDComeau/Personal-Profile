@@ -5,7 +5,7 @@ export function AboutSkills({ categories }: { categories: SkillCategory[] }) {
     return (
         <section className="py-16 bg-muted/40">
             <div className="mx-auto max-w-4xl px-4">
-                <h2 className="mb-10 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                <h2 className="mb-10 text-center text-sm font-bold uppercase tracking-[0.2em] text-foreground">
                     Skills & Tools
                 </h2>
 

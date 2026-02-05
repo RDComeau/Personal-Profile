@@ -4,7 +4,7 @@ export function AboutJourney() {
     return (
         <section className="py-16 bg-muted/40">
             <div className="mx-auto max-w-3xl px-4 space-y-6">
-                <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                <h2 className="text-center text-sm font-bold uppercase tracking-[0.2em] text-foreground">
                     My Journey
                 </h2>
 
