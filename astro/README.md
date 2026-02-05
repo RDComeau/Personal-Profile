@@ -1,6 +1,6 @@
 # Personal Profile
 
-A personal portfolio and profile site for Richard Comeau — Senior Cloud & DevOps Engineer. Built with Astro, React, and Tailwind CSS.
+A personal site and content hub for Richard Comeau — software engineer, entrepreneur, and creator. Built with Astro, React, and Tailwind CSS.
 
 ## Prerequisites
 
@@ -30,17 +30,34 @@ All common tasks are available through the Makefile:
 
 The `YARN` variable can be overridden if needed: `make dev YARN=npx yarn`.
 
+## Pages
+
+| Route | Purpose |
+| :---- | :------ |
+| `/` | Home — hero with typing animation, latest articles/podcasts/readings/projects, sidebar drawer |
+| `/about` | About — personal journey, interactive filterable experience timeline, skills, interests |
+| `/blog` | Blog — all content with client-side filtering by medium, org, category, and tags |
+| `/blog/[slug]` | Individual content pages |
+| `/contact` | Contact — opportunity cards, contact form, social links |
+| `/projects` | Redirects to `/blog?type=project` |
+
 ## Project Structure
 
 ```
 src/
 ├── components/
-│   ├── sections/     # Page content sections (HomeHero, AboutMe, Articles, etc.)
+│   ├── about/        # About page components (Hero, Journey, Timeline, Skills, Personal, Cta)
+│   ├── blog/         # Blog page components (Layout, FilterBar, Grid, Card, Sidebar, Pagination)
+│   ├── contact/      # Contact page component (ContactPage)
+│   ├── sections/     # Home page sections (HomeHero, Articles, Podcasts, Readings, Projects, Sidebar)
 │   └── ui/           # Reusable UI primitives (Button, Input, etc.)
-├── hooks/            # Custom React hooks (useTypingEffect, etc.)
+├── hooks/            # Custom React hooks (useTypingEffect)
 ├── layouts/          # Page layout wrappers (Layout.astro, SiteLayout, ResizableLayout)
-├── lib/              # Utility functions (cn helper)
-├── pages/            # File-based routing (index.astro, profile.astro)
+├── lib/
+│   ├── about/        # About data layer (roles, skills, interests, company/type definitions)
+│   ├── content/      # Content data layer (adapter pattern — mock data now, Ghost CMS later)
+│   └── utils.ts      # cn() helper (clsx + tailwind-merge)
+├── pages/            # File-based routing (index, about, blog, blog/[slug], contact, projects)
 └── styles/           # Global CSS and theme definitions
 ```
 
@@ -58,5 +75,6 @@ src/
 
 - **Astro island hydration:** React components in `.astro` files are server-rendered by default. Any component using client-side state (`useState`, `useEffect`, event handlers) must have a `client:load` or `client:idle` directive to ship JavaScript to the browser.
 - **Theming:** All color tokens are defined in `src/styles/global.css` using CSS custom properties. Use theme token classes (`bg-background`, `text-muted-foreground`, `border-border`, etc.) for structural colors. Reserve hardcoded palette colors (e.g., `bg-amber-100`) only for intentional semantic accents like badges.
+- **Content adapter pattern:** Content comes from `src/lib/content/adapter.ts`, not hardcoded in components. Currently backed by mock data in `mock-data.ts`. Designed to swap to Ghost CMS API calls without changing any components.
 - **No linting or testing** is currently configured.
 - **Local notes:** Files matching `*.local.md` are gitignored for personal reference that shouldn't be committed.
