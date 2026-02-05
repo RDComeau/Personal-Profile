@@ -14,30 +14,70 @@ const typeFilters: { key: RoleType | undefined; label: string }[] = [
     { key: "community", label: "Community" },
 ]
 
+const typePriority: Record<RoleType, number> = {
+    "full-time": 0,
+    "contract": 1,
+    "military": 2,
+    "venture": 3,
+    "education": 4,
+    "community": 5,
+}
+
+const months: Record<string, number> = {
+    Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+    Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11,
+}
+
+function parseDate(d: string): number {
+    if (d === "Present") return Infinity
+    const parts = d.split(" ")
+    if (parts.length === 2) {
+        const month = months[parts[0]] ?? 0
+        const year = parseInt(parts[1], 10)
+        return year * 12 + month
+    }
+    return parseInt(parts[0], 10) * 12
+}
+
+function sortRoles(items: Role[]): Role[] {
+    return [...items].sort((a, b) => {
+        // Primary: end date descending (Present first, then most recent)
+        const endDiff = parseDate(b.endDate) - parseDate(a.endDate)
+        if (endDiff !== 0) return endDiff
+        // Secondary: start date descending (most recent first)
+        const startDiff = parseDate(b.startDate) - parseDate(a.startDate)
+        if (startDiff !== 0) return startDiff
+        // Tertiary: type priority ascending
+        return typePriority[a.type] - typePriority[b.type]
+    })
+}
+
 export function AboutTimeline({ roles }: { roles: Role[] }) {
     const [activeType, setActiveType] = useState<RoleType | undefined>(undefined)
     const [activeCompany, setActiveCompany] = useState<string | undefined>(undefined)
 
-    // Derive unique companies from roles (preserving order of first appearance)
+    const sorted = useMemo(() => sortRoles(roles), [roles])
+
+    // Derive unique companies from sorted roles (preserving order of first appearance)
     const companies = useMemo(() => {
         const seen = new Set<string>()
         const result: string[] = []
-        for (const role of roles) {
+        for (const role of sorted) {
             if (!seen.has(role.company)) {
                 seen.add(role.company)
                 result.push(role.company)
             }
         }
         return result
-    }, [roles])
+    }, [sorted])
 
     const filtered = useMemo(() => {
-        return roles.filter((role) => {
+        return sorted.filter((role) => {
             if (activeType && role.type !== activeType) return false
             if (activeCompany && role.company !== activeCompany) return false
             return true
         })
-    }, [roles, activeType, activeCompany])
+    }, [sorted, activeType, activeCompany])
 
     const handleTypeClick = (type: RoleType | undefined) => {
         setActiveType(type)
