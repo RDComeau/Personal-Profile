@@ -1,6 +1,10 @@
 # -------------------------------------------------------------------
+# NOTE: Prefer using the root Makefile for unified orchestration.
+#       Run `make up` or `make dev` from the project root.
+#       This file is preserved for standalone Ghost development.
+# -------------------------------------------------------------------
+# -------------------------------------------------------------------
 # REQUIRED: Base name for this Ghost instance.
-# Replace [fill-me-in] with a short name, e.g. "family-blog".
 # This must match the prefix used in docker-compose.yml.
 # -------------------------------------------------------------------
 INSTANCE_NAME = personal-profile

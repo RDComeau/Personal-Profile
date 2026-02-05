@@ -1,2 +1,14 @@
-# jetbrains setting folder
-.idea
+# IDE
+.idea/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+
+# Docker
+*.log
+
+# Local notes
+*.local.md

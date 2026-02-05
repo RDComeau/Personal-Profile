@@ -106,3 +106,15 @@ Layout.astro > SiteLayout
 Defined entirely in `src/styles/global.css` using Tailwind v4's `@theme` directive with OKLCH CSS custom properties. Light/dark mode via `:root` / `.dark` selectors. No separate `tailwind.config.*` file exists. Use theme token classes (`bg-background`, `text-muted-foreground`, `border-border`) for structural colors. Reserve hardcoded palette colors only for semantic accents (badges).
 
 **Path alias:** `@/*` maps to `./src/*` (configured in tsconfig.json).
+
+## Roadmap
+
+- [ ] **Ghost Content API adapter** — Replace mock data in `src/lib/content/adapter.ts` with Ghost Content API calls; normalize Ghost response to existing `ContentItem` type
+- [ ] **Content normalization layer** — Map Ghost's tag taxonomy, authors, and post metadata to Astro's content types (`Medium`, organizations, categories, tags)
+- [ ] **SSG build integration** — Wire up `getStaticPaths` in `blog/[slug].astro` to fetch from Ghost at build time instead of mock data
+- [ ] **Blog post page styling** — Design and implement the individual blog post template (`blog/[slug].astro`) for Ghost-sourced content
+- [ ] **Dark mode toggle** — Add user-facing theme switcher (CSS custom properties already support `.dark` selector)
+- [ ] **Newsletter integration** — Connect newsletter signup forms to an actual email service
+- [ ] **SEO and meta tags** — Add Open Graph, Twitter Card, and structured data to all pages
+- [ ] **Linting and testing** — Configure ESLint and a test runner
+- [ ] **Contact form backend** — Wire the contact form to a real submission handler

@@ -1,0 +1,11 @@
+# Development overrides — automatically merged by Docker Compose.
+# Exposes service ports for direct local access during development.
+# Production targets use `docker compose -f docker-compose.yml` to skip this.
+services:
+  personal-profile-ghost:
+    ports:
+      - "8080:2368"
+
+  personal-profile-db:
+    ports:
+      - "3306:3306"
