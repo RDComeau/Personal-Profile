@@ -17,11 +17,18 @@ export function LatestArticles({ tinted = false, items = [] }: { tinted?: boolea
                     </a>
                 </div>
 
-                <div className="flex flex-col gap-3">
-                    {items.map((post) => (
-                        <ArticleListItem key={post.slug} post={post}/>
-                    ))}
-                </div>
+                {items.length > 0 ? (
+                    <div className="flex flex-col gap-3">
+                        {items.map((post) => (
+                            <ArticleListItem key={post.slug} post={post}/>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
+                        <p className="text-sm font-medium text-muted-foreground">Coming Soon!</p>
+                        <p className="mt-1 text-xs text-muted-foreground/60">Articles are on the way.</p>
+                    </div>
+                )}
             </div>
         </section>
     )

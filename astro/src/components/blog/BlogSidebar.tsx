@@ -1,4 +1,3 @@
-import * as React from "react"
 import { useState } from "react"
 import type { ContentItem } from "@/lib/content/types"
 import { organizations, categories } from "@/lib/content/taxonomy"
@@ -66,7 +65,7 @@ export function BlogSidebar({
     const visibleCats = showAllCats ? catItems : catItems.slice(0, CAT_LIMIT)
     const visibleTags = showAllTags ? tagItems : tagItems.slice(0, TAG_LIMIT)
 
-    const handleSubscribe = (e: React.FormEvent) => {
+    const handleSubscribe = (e: { preventDefault: () => void }) => {
         e.preventDefault()
         setSubscribed(true)
     }

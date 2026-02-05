@@ -34,11 +34,18 @@ export function LatestReadings({ tinted = false, items = [] }: { tinted?: boolea
                     </a>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((reading) => (
-                        <ReadingCard key={reading.slug} reading={reading}/>
-                    ))}
-                </div>
+                {items.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {items.map((reading) => (
+                            <ReadingCard key={reading.slug} reading={reading}/>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
+                        <p className="text-sm font-medium text-muted-foreground">Coming Soon!</p>
+                        <p className="mt-1 text-xs text-muted-foreground/60">Reading recommendations are on the way.</p>
+                    </div>
+                )}
             </div>
         </section>
     )
