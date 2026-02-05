@@ -54,9 +54,7 @@ export function AboutHero() {
                             <a href="/blog">See my work</a>
                         </Button>
                         <Button variant="outline" size="lg" asChild>
-                            <a href="/resume.pdf" target="_blank" rel="noreferrer">
-                                Download r&eacute;sum&eacute;
-                            </a>
+                            <a href="/contact">Get in touch</a>
                         </Button>
                     </div>
 

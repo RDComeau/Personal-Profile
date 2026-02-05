@@ -37,8 +37,12 @@ const HomeHero = () => {
                 </p>
 
                 <div className="flex items-center justify-center gap-3 pt-4">
-                    <Button size="lg">Work with me</Button>
-                    <Button variant="outline" size="lg">Watch intro video</Button>
+                    <Button size="lg" asChild>
+                        <a href="/contact">Work with me</a>
+                    </Button>
+                    <Button variant="outline" size="lg" asChild>
+                        <a href="/about">Learn more</a>
+                    </Button>
                 </div>
 
                 {/*<SocialLinksStrip/> /!* Adrian-style social bar *!/*/}

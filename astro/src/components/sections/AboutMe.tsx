@@ -54,13 +54,11 @@ export default function AboutMe() {
 
                     {/* Primary CTA */}
                     <div className="flex flex-wrap items-center gap-3">
-                        <Button size="lg">
-                            View my work
+                        <Button size="lg" asChild>
+                            <a href="/blog">View my work</a>
                         </Button>
                         <Button variant="outline" size="lg" asChild>
-                            <a href="/resume.pdf" target="_blank" rel="noreferrer">
-                                Download résumé
-                            </a>
+                            <a href="/contact">Get in touch</a>
                         </Button>
                     </div>
 
