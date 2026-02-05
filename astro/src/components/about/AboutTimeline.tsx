@@ -6,21 +6,23 @@ import { cn } from "@/lib/utils"
 
 const typeFilters: { key: RoleType | undefined; label: string }[] = [
     { key: undefined, label: "All" },
+    { key: "org", label: "Orgs" },
     { key: "full-time", label: "Full-time" },
     { key: "contract", label: "Contract" },
     { key: "military", label: "Military" },
-    { key: "venture", label: "Ventures" },
+    { key: "project", label: "Projects" },
     { key: "education", label: "Education" },
     { key: "community", label: "Community" },
 ]
 
 const typePriority: Record<RoleType, number> = {
-    "full-time": 0,
-    "contract": 1,
-    "military": 2,
-    "venture": 3,
-    "education": 4,
-    "community": 5,
+    "org": 0,
+    "full-time": 1,
+    "contract": 2,
+    "military": 3,
+    "project": 4,
+    "education": 5,
+    "community": 6,
 }
 
 const months: Record<string, number> = {
@@ -41,13 +43,17 @@ function parseDate(d: string): number {
 
 function sortRoles(items: Role[]): Role[] {
     return [...items].sort((a, b) => {
-        // Primary: end date descending (Present first, then most recent)
+        // Primary: orgs always float to the top
+        const aIsOrg = a.type === "org" ? 0 : 1
+        const bIsOrg = b.type === "org" ? 0 : 1
+        if (aIsOrg !== bIsOrg) return aIsOrg - bIsOrg
+        // Secondary: end date descending (Present first, then most recent)
         const endDiff = parseDate(b.endDate) - parseDate(a.endDate)
         if (endDiff !== 0) return endDiff
-        // Secondary: start date descending (most recent first)
+        // Tertiary: start date descending (most recent first)
         const startDiff = parseDate(b.startDate) - parseDate(a.startDate)
         if (startDiff !== 0) return startDiff
-        // Tertiary: type priority ascending
+        // Quaternary: type priority ascending
         return typePriority[a.type] - typePriority[b.type]
     })
 }

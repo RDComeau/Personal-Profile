@@ -14,10 +14,11 @@ export const companyColors: Record<string, CompanyDef> = {
 }
 
 export const typeLabels: Record<RoleType, { label: string; className: string }> = {
+    "org": { label: "Org", className: "bg-green-100 text-green-800" },
     "full-time": { label: "Full-time", className: "bg-sky-100 text-sky-800" },
     "contract": { label: "Contract", className: "bg-amber-100 text-amber-800" },
     "military": { label: "Military", className: "bg-blue-100 text-blue-800" },
-    "venture": { label: "Venture", className: "bg-green-100 text-green-800" },
+    "project": { label: "Project", className: "bg-violet-100 text-violet-800" },
     "education": { label: "Education", className: "bg-indigo-100 text-indigo-800" },
     "community": { label: "Community", className: "bg-rose-100 text-rose-800" },
 }
@@ -142,14 +143,14 @@ export const roles: Role[] = [
         ],
     },
 
-    // ── Ventures ────────────────────────────────────────────
+    // ── Orgs ────────────────────────────────────────────────
     {
         title: "Co-Founder",
         company: "St. Paul's Tentmakers",
         location: "Cape Girardeau, MO",
         startDate: "2024",
         endDate: "Present",
-        type: "venture",
+        type: "org",
         highlights: [
             "Building a faith-driven technology consultancy that serves churches and nonprofits with modern software solutions",
             "Developing custom applications for event coordination, community management, and organizational operations",
@@ -162,24 +163,11 @@ export const roles: Role[] = [
         location: "Cape Girardeau, MO",
         startDate: "2024",
         endDate: "Present",
-        type: "venture",
+        type: "org",
         highlights: [
             "Launching a drone services business offering aerial photography, videography, and site surveying",
             "Building the operational and technical infrastructure to serve local businesses and real estate",
         ],
-    },
-    {
-        title: "Personal Portfolio & Blog",
-        company: "Self",
-        location: "Remote",
-        startDate: "2025",
-        endDate: "Present",
-        type: "venture",
-        highlights: [
-            "Designed and built this site as a content hub for articles, podcasts, book notes, and project showcases",
-            "Astro v5 static site with React islands, Tailwind v4, and a data layer ready for Ghost CMS integration",
-        ],
-        technologies: ["Astro", "React", "TypeScript", "Tailwind CSS"],
     },
 
     // ── Education ───────────────────────────────────────────

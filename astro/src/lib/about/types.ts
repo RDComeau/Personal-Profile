@@ -1,4 +1,4 @@
-export type RoleType = "full-time" | "contract" | "military" | "venture" | "education" | "community"
+export type RoleType = "org" | "full-time" | "contract" | "military" | "project" | "education" | "community"
 
 export type Role = {
     title: string
