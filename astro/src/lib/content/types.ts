@@ -34,6 +34,10 @@ export type ContentItem = {
     htmlContent?: string
     canonicalUrl?: string
     project?: string
+
+    // Source tracking
+    sourceId?: string
+    sourcePlatform?: string
 }
 
 export type BlogFilters = {

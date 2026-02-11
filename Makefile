@@ -14,7 +14,8 @@ YELLOW := \033[0;33m
 NC     := \033[0m
 
 .PHONY: help dev dev-astro dev-ghost up down build rebuild \
-        logs logs-astro logs-ghost logs-db ps clean
+        logs logs-astro logs-ghost logs-db ps clean \
+        deploy-local init-deploy
 
 # ──────────────────────────────────────────────
 # Help
@@ -44,6 +45,11 @@ help:
 	@echo ""
 	@echo "  Maintenance:"
 	@echo "    clean            Remove build artifacts and stopped containers"
+	@echo ""
+	@echo "  Deployment:"
+	@echo "    init-deploy      Create deploy directory (run once on homelab)"
+	@echo "    deploy-local     Build Astro and deploy to local directory"
+	@echo "    restart-astro    Restart Astro container after deploy"
 	@echo ""
 
 # ──────────────────────────────────────────────
@@ -107,3 +113,27 @@ clean:
 	@echo -e "$(GREEN)[clean]$(NC) Removing build artifacts and stopped containers..."
 	$(DOCKER_COMPOSE_PROD) down --remove-orphans
 	$(MAKE) -C astro clean
+
+# ──────────────────────────────────────────────
+# Deployment
+# ──────────────────────────────────────────────
+
+# Initialize deploy directory (run once on homelab)
+init-deploy:
+	@echo -e "$(GREEN)[init-deploy]$(NC) Creating deploy directory..."
+	mkdir -p ./deploy/astro
+	@echo "Deploy directory created at ./deploy/astro"
+	@echo "Set ASTRO_DIST_PATH in environment if using a different location"
+
+# Local deploy (build + copy to deploy dir)
+deploy-local:
+	@echo -e "$(GREEN)[deploy-local]$(NC) Building and deploying locally..."
+	$(MAKE) -C astro build
+	@echo -e "$(GREEN)[deploy-local]$(NC) Copying to deploy directory..."
+	mkdir -p ./deploy/astro
+	rsync -av --delete astro/dist/ ./deploy/astro/
+	@echo -e "$(GREEN)[deploy-local]$(NC) Done. Restart Astro container if needed: make restart-astro"
+
+restart-astro:
+	@echo -e "$(GREEN)[restart-astro]$(NC) Restarting Astro container..."
+	$(DOCKER_COMPOSE_PROD) restart personal-profile-astro

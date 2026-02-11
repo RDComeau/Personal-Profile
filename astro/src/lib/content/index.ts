@@ -19,3 +19,11 @@ export {
     getOrgColorClass,
 } from "./taxonomy"
 export type { OrganizationDef, CategoryDef, TagDef } from "./taxonomy"
+export type {
+    SourceConnection,
+    PlatformType,
+    GhostConnection,
+    MediumConnection,
+    SubstackConnection,
+    HashnodeConnection,
+} from "./sources"

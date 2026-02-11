@@ -44,17 +44,25 @@ Layout.astro > SiteLayout
 ```
 
 ### Layout components
-- `Layout.astro` — Root HTML document wrapper (head, body, global CSS import)
+- `Layout.astro` — Root HTML document wrapper (head, body, global CSS import). Props: `title`, `canonicalUrl`. Renders `<link rel="canonical">` and page title.
 - `SiteLayout.tsx` — Sticky header with centered navigation (Home, About, Blog, Contact)
 - `ResizableLayout.tsx` — Overlay sidebar drawer (toggle button on left edge, slides over content, full-height). Does **not** use `react-resizable-panels` despite the name — it's a simple `useState` + CSS transform drawer.
 
 ### Data layers
 
-**Content data** (`src/lib/content/`): Adapter pattern for blog/content items. All content flows through a single `ContentItem` type with optional medium-specific fields. Currently backed by mock data; designed to swap to Ghost CMS without changing any components.
-- `types.ts` — `ContentItem`, `Medium`, `BlogFilters`, taxonomy types
-- `taxonomy.ts` — Static arrays of organizations, categories, tags with slugs and color classes; lookup helpers (`getOrgBySlug`, `getOrgColorClass`)
-- `mock-data.ts` — ~17 `ContentItem[]` entries (articles, podcasts, readings, projects)
-- `adapter.ts` — `getAllContent()`, `getLatestByMedium()`, `getContentBySlug()`, `filterContent()`, `paginateContent()`, taxonomy count functions
+**Content data** (`src/lib/content/`): Multi-source adapter pattern for blog/content items. All content flows through a single `ContentItem` type with optional medium-specific fields. Sources are configured via `SourceConnection` definitions — each connection maps a platform (Ghost, Medium, Substack, Hashnode) to an organization. At build time, the aggregator fetches from all enabled connections in parallel, normalizes to `ContentItem`, and merges results.
+- `types.ts` — `ContentItem` (includes `sourceId`/`sourcePlatform` tracking), `Medium`, `BlogFilters`
+- `sources.ts` — `SourceConnection` discriminated union type (Ghost, Medium, Substack, Hashnode), `PlatformType`
+- `sources.config.ts` — Connection definitions array. Each connection has an `orgSlug`, platform-specific config, and `enabled` flag. Serializable for future admin dashboard.
+- `fetchers/ghost.ts` — Ghost Content API fetcher, parameterized by `GhostConnection` (env var names for URL/key)
+- `normalizers/ghost.ts` — Ghost post → `ContentItem` normalizer, parameterized by connection for org/medium fallbacks
+- `normalizers/utils.ts` — Shared helpers: `formatDate()`, `extractFirstImage()`, `deriveSlugFromUrl()`
+- `aggregator.ts` — Orchestration: iterates enabled connections, calls platform-specific fetcher+normalizer, merges with slug deduplication. Graceful degradation (failing sources return `[]`).
+- `adapter.ts` — Public API: `getAllContent()`, `getLatestByMedium()`, `getContentBySlug()`, `getAllSlugs()`. Caches aggregated content for the build. Sync helpers: `filterContent()`, `paginateContent()`, count functions
+- `taxonomy.ts` — Static arrays of organizations, categories, tags with slugs and color classes; lookup helpers (`getOrgBySlug`, `getOrgColorClass`). Connection `orgSlug` values must match entries here.
+- `ghost-client.ts` — Original Ghost client (preserved, no longer imported by adapter)
+- `normalize.ts` — Original Ghost normalizer (preserved, no longer imported by adapter)
+- `mock-data.ts` — Preserved for reference, no longer imported
 - `index.ts` — Barrel export
 
 **About data** (`src/lib/about/`): Typed data for the about page timeline, skills, and personal interests.
@@ -111,12 +119,15 @@ Defined entirely in `src/styles/global.css` using Tailwind v4's `@theme` directi
 
 ### Ghost SSG Integration (see root CLAUDE.md for cross-cutting phases)
 
-- [ ] **Phase 1: Ghost API client + normalization** — Create `src/lib/content/ghost-client.ts` (fetch from Ghost Content API), create `src/lib/content/normalize.ts` (parse `#org-*`, `#cat-*`, `#medium-*`, `#project-*`, `#status-*` tags into `ContentItem` fields). Update `adapter.ts` to call Ghost instead of importing mock data. Add env config for `GHOST_URL` and `GHOST_CONTENT_API_KEY`.
-- [ ] **Phase 2: Empty state handling** — Home page sections (`Articles`, `Podcasts`, `Readings`, `Projects`) show "Coming Soon!" when `items` array is empty. Blog page can remain blank.
-- [ ] **Phase 3: SEO canonical URLs** — Add `canonicalUrl` to `ContentItem` type. Map from Ghost's `canonical_url`. Render `<link rel="canonical">` in `Layout.astro`. For cross-org content, canonical points to the originating org's site.
-- [ ] **Phase 4: Multi-org aggregation** — Fetch from multiple Ghost instances at build time. Config array of `{ name, url, apiKey }` endpoints. Merge + deduplicate content. Auto-set canonical URLs to source org.
-- [ ] **Phase 5: External content sources (RSS/API)** — Fetch content from external platforms (Medium, Hashnode, etc.) via RSS feeds or public APIs. Normalize into `ContentItem` type alongside Ghost content. Canonical URLs point to the original platform URL. Adapter config supports a list of `{ name, type: "rss" | "api", url }` sources.
-- [ ] **Blog post page with Ghost HTML** — Render Ghost's `html` field in `blog/[slug].astro` instead of excerpt placeholder. Style Ghost HTML output with Tailwind prose classes.
+- [x] **Phase 1: Ghost API client + normalization** — `ghost-client.ts` fetches from Ghost Content API, `normalize.ts` parses tag prefixes. `adapter.ts` is async with build-time caching. Env vars: `GHOST_URL`, `GHOST_CONTENT_API_KEY` in `astro/.env`.
+- [x] **Phase 2: Empty state handling** — Home page sections show "Coming Soon!" with dashed border when `items` array is empty.
+- [x] **Phase 3: SEO canonical URLs** — `canonicalUrl` on `ContentItem`, `<link rel="canonical">` in `Layout.astro`. Page titles implemented (`title | Richard Comeau`).
+- [x] **Blog post page with Ghost HTML** — `blog/[slug].astro` renders `item.htmlContent` via `set:html`. Falls back to excerpt if no HTML.
+- [x] **Phase 4A: Multi-source scaffolding** — `SourceConnection` config model (`sources.ts`), connection definitions (`sources.config.ts`), parameterized Ghost fetcher (`fetchers/ghost.ts`) and normalizer (`normalizers/ghost.ts`), aggregator (`aggregator.ts`). Adapter wired to aggregator. Architecture supports multiple Ghost instances + future platforms.
+- [ ] **Phase 4B: Multi-Ghost instances** — Add additional Ghost connections to `sources.config.ts` with separate env vars per instance.
+- [ ] **Phase 5A: RSS sources (Medium + Substack)** — Add `rss-parser` dependency, `fetchers/rss.ts`, `normalizers/medium.ts`, `normalizers/substack.ts`. Wire into aggregator.
+- [ ] **Phase 5B: Hashnode API** — Add `fetchers/hashnode.ts`, `normalizers/hashnode.ts`. Wire into aggregator.
+- [ ] **Phase 5C: Additional external sources** — Extend `PlatformType` and add fetcher/normalizer pairs for new platforms as needed.
 
 ### Other Features
 

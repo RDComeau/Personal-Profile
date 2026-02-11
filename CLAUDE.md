@@ -81,9 +81,9 @@ Caddy configuration lives in its own project — this repo only ensures containe
 - The Astro container's internal Caddy is separate from the centralized Caddy — it only serves static files on port 80
 - MySQL healthcheck ensures Ghost waits for DB readiness before starting
 
-## Future SSG Build Pipeline
+## SSG Build Pipeline
 
-Currently Astro builds with mock data. When the Ghost Content API integration is implemented:
+Astro fetches content from the Ghost Content API at build time (SSG). The data flow:
 
 ```
 DB starts → healthcheck passes
@@ -92,7 +92,9 @@ DB starts → healthcheck passes
       → static output served by internal Caddy
 ```
 
-The Astro Dockerfile won't change. The adapter code in `astro/src/lib/content/adapter.ts` will swap from mock data to Ghost API calls. The docker-compose may add a `depends_on` from Astro to Ghost with a healthcheck if Astro needs Ghost available at build time.
+**Local dev workflow (`make dev`):** Astro runs locally via `yarn dev` and calls Ghost in Docker at `localhost:8080`. Hot reload works normally.
+
+**Production build constraint:** The Astro Dockerfile builds at image creation time, when Ghost isn't reachable. Current workaround: build Astro locally first, then build the Docker image. Future solution: a build-time service or CI step that builds Astro with Ghost available, then copies static output into the container.
 
 ## Extensibility
 
@@ -120,15 +122,42 @@ Features that span multiple services or directories:
 
 ### Ghost → Astro SSG Integration (Phased)
 
-- [ ] **Phase 1: Ghost API client + normalization layer** — Create Ghost Content API client, build normalization layer that parses `#org-*`, `#cat-*`, `#medium-*`, `#project-*`, `#status-*` tag prefixes into `ContentItem` fields. Replace mock data import in adapter.ts. Add env config for API URL + key. Runs at Astro build time (SSG).
-- [ ] **Phase 2: Empty state handling** — Home page sections show "Coming Soon!" when no content of that medium exists. Blog page can remain blank for missing content types.
-- [ ] **Phase 3: SEO canonical URLs** — Add `canonicalUrl` field to `ContentItem`. Map Ghost's `canonical_url` field. Render `<link rel="canonical">` in page head. For org-sourced content, canonical points to the originating org's site to avoid duplicate content penalties.
-- [ ] **Phase 4: Multi-org API aggregation** — Astro fetches from multiple Ghost CMS instances at build time (one per org). Config for multiple Ghost endpoints (URL + API key per org). Normalization layer merges content across sources. Canonical URLs auto-set to the source org's URL.
-- [ ] **Phase 5: External content sources (RSS/API)** — Bring in content from external platforms (Medium, Hashnode, etc.) via RSS feeds or APIs. Normalize into the same `ContentItem` type. Canonical URLs point to the original platform. Allows writing on other sites while aggregating everything into the personal profile.
+- [x] **Phase 1: Ghost API client + normalization layer** — Ghost Content API client (`ghost-client.ts`), normalization layer (`normalize.ts`) parsing `#org-*`, `#cat-*`, `#medium-*`, `#project-*`, `#status-*` tag prefixes. Adapter is async and caches content for the build. Env config via `astro/.env`.
+- [x] **Phase 2: Empty state handling** — Home page sections show "Coming Soon!" with dashed border placeholder when no content of that medium exists.
+- [x] **Phase 3: SEO canonical URLs** — `canonicalUrl` on `ContentItem`, mapped from Ghost's `canonical_url`. `Layout.astro` renders `<link rel="canonical">` (uses `canonicalUrl` if set, otherwise self-referencing). Page titles also implemented.
+- [x] **Phase 4A: Multi-source scaffolding** — `SourceConnection` config model with discriminated union (Ghost, Medium, Substack, Hashnode). Connection definitions in `sources.config.ts` (serializable, admin-dashboard-ready). Parameterized fetchers (`fetchers/`) and normalizers (`normalizers/`). Aggregator orchestrates parallel fetch from all enabled connections. Adapter wired to aggregator with unchanged public API.
+- [ ] **Phase 4B: Multi-Ghost instances** — Add additional Ghost connections with separate env vars per instance.
+- [ ] **Phase 5A: RSS sources (Medium + Substack)** — `rss-parser` dependency, RSS fetcher, Medium/Substack normalizers.
+- [ ] **Phase 5B: Hashnode API** — Hashnode GraphQL fetcher and normalizer.
+- [ ] **Phase 5C: Additional external sources** — Extend `PlatformType` for new platforms as needed.
+
+### Production Deployment
+
+- [x] **SSG build with Ghost access** — GitHub Actions self-hosted runner builds on homelab with Ghost network access. See `.github/RUNNER_SETUP.md`.
+- [ ] **Hostname configuration** — Domain `richardcomeau.com` purchased. Update centralized Caddy config + Cloudflare Tunnel.
+- [ ] **Ghost production URL** — `ghost/.env` `GHOST_URL` must match the public URL for links/images to work correctly.
+
+## CI/CD
+
+GitHub Actions workflows in `.github/workflows/`:
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `ci.yml` | PR to master | Run tests + validate build (blocks fork PRs from self-hosted runner) |
+| `deploy.yml` | Push to master | Full build + deploy to homelab |
+| `content-sync.yml` | Every 30 min | Poll Ghost for changes, trigger deploy if new content |
+| `test.yml` | Reusable | Unit tests (placeholder until tests added) |
+| `build.yml` | Reusable | Build Astro with Ghost API |
+
+**Self-hosted runner**: Required for Ghost API access and deploy. See `.github/RUNNER_SETUP.md`.
+
+**Required secrets** (set in GitHub repo settings):
+- `GHOST_URL` — Ghost API URL (e.g., `http://personal-profile-ghost:2368`)
+- `GHOST_CONTENT_API_KEY` — Ghost Content API key
 
 ### Other
 
 - [ ] **Admin dashboard** — Separate service for managing content, configuration, and analytics
 - [ ] **Database SQL migrations** — Migration scripts and tooling for schema management
-- [ ] **CI/CD pipeline** — Automated build, test, and deploy workflow
+- [x] **CI/CD pipeline** — GitHub Actions: test, build, deploy workflows with self-hosted runner
 - [ ] **Monitoring and health checks** — Observability across all services

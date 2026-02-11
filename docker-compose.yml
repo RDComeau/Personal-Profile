@@ -1,11 +1,14 @@
 services:
   # --- Astro Static Frontend ---
+  # Serves pre-built static files from a volume
+  # Files are deployed by GitHub Actions, not built in container
   personal-profile-astro:
-    build:
-      context: ./astro
-      dockerfile: Dockerfile
+    image: caddy:2-alpine
     container_name: personal-profile-astro
     restart: unless-stopped
+    volumes:
+      - ./astro/Caddyfile:/etc/caddy/Caddyfile:ro
+      - astro-dist:/srv:ro
     networks:
       - default
       - proxy
@@ -54,3 +57,12 @@ networks:
   default:
   proxy:
     external: true
+
+volumes:
+  # Astro static files - populated by GitHub Actions deploy
+  astro-dist:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${ASTRO_DIST_PATH:-./deploy/astro}

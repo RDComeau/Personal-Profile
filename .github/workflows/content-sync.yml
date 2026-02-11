@@ -1,0 +1,82 @@
+# Content Sync: Polls external content sources for changes
+# Triggers a rebuild when new content is detected
+
+name: Content Sync
+
+on:
+  schedule:
+    # Run every 30 minutes
+    - cron: "*/30 * * * *"
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+# Only one sync at a time
+concurrency:
+  group: content-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check-ghost:
+    name: Check Ghost for Updates
+    runs-on: self-hosted
+    outputs:
+      has-changes: ${{ steps.check.outputs.has-changes }}
+
+    steps:
+      - name: Check Ghost API for updates
+        id: check
+        env:
+          GHOST_URL: ${{ secrets.GHOST_URL }}
+          GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
+          CACHE_FILE: /tmp/ghost-content-hash
+        run: |
+          # Fetch current content hash from Ghost
+          CURRENT_HASH=$(curl -sf "${GHOST_URL}/ghost/api/content/posts/?key=${GHOST_CONTENT_API_KEY}&limit=all&fields=id,updated_at" \
+            | sha256sum | cut -d' ' -f1)
+
+          if [ -z "$CURRENT_HASH" ]; then
+            echo "⚠️ Failed to fetch Ghost content"
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Compare with cached hash
+          if [ -f "$CACHE_FILE" ]; then
+            CACHED_HASH=$(cat "$CACHE_FILE")
+            if [ "$CURRENT_HASH" = "$CACHED_HASH" ]; then
+              echo "✅ No Ghost content changes detected"
+              echo "has-changes=false" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+
+          # Save new hash and signal changes
+          echo "$CURRENT_HASH" > "$CACHE_FILE"
+          echo "🔄 Ghost content has changed!"
+          echo "has-changes=true" >> $GITHUB_OUTPUT
+
+  # Future: Add RSS feed checking here
+  # check-rss:
+  #   name: Check RSS Feeds
+  #   runs-on: self-hosted
+  #   outputs:
+  #     has-changes: ${{ steps.check.outputs.has-changes }}
+  #   steps:
+  #     - name: Check RSS feeds for updates
+  #       id: check
+  #       run: |
+  #         # Loop through configured RSS feeds
+  #         # Compare etag/last-modified with cached values
+  #         # Set has-changes=true if any feed has new content
+  #         echo "has-changes=false" >> $GITHUB_OUTPUT
+
+  trigger-deploy:
+    name: Trigger Deploy
+    needs: [check-ghost]
+    if: needs.check-ghost.outputs.has-changes == 'true'
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

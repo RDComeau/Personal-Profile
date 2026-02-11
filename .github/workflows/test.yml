@@ -1,0 +1,41 @@
+# Reusable workflow: Run unit tests
+# Called by ci.yml and deploy.yml
+
+name: Test
+
+on:
+  workflow_call:
+    # No inputs needed for now
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+          cache-dependency-path: astro/yarn.lock
+
+      - name: Install dependencies
+        working-directory: astro
+        run: yarn install --frozen-lockfile
+
+      # TODO: Replace with actual test command when tests are added
+      # Example: yarn test
+      - name: Run tests (placeholder)
+        working-directory: astro
+        run: |
+          echo "✅ Unit tests placeholder"
+          echo "No tests configured yet. Add tests and update this step."
+          echo ""
+          echo "Suggested test setup:"
+          echo "  - yarn add -D vitest @testing-library/react"
+          echo "  - Add 'test' script to package.json"
+          echo "  - Update this step to: yarn test"

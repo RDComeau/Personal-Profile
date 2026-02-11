@@ -12,3 +12,6 @@
 
 # Local notes
 *.local.md
+
+# Deploy directory (populated by CI/CD)
+deploy/

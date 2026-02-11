@@ -1,0 +1,84 @@
+# Deploy workflow: Runs on push to master
+# Builds the site and deploys to homelab
+
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "astro/**"
+      - ".github/workflows/**"
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+  # Allow triggering from content-sync workflow
+  workflow_call:
+
+# Only one deploy at a time
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+# Restrict permissions
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+
+  build:
+    name: Build
+    needs: test
+    uses: ./.github/workflows/build.yml
+    with:
+      upload-artifact: true
+    secrets:
+      GHOST_URL: ${{ secrets.GHOST_URL }}
+      GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
+
+  deploy:
+    name: Deploy to Homelab
+    needs: build
+    runs-on: self-hosted
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: astro-dist
+          path: dist
+
+      - name: Deploy to Caddy
+        run: |
+          # Target directory where Caddy serves files
+          DEPLOY_DIR="${DEPLOY_PATH:-/srv/personal-profile/astro}"
+
+          echo "📦 Deploying to $DEPLOY_DIR"
+
+          # Create backup of current deployment
+          if [ -d "$DEPLOY_DIR" ]; then
+            BACKUP_DIR="${DEPLOY_DIR}.backup.$(date +%Y%m%d_%H%M%S)"
+            echo "📋 Backing up current deployment to $BACKUP_DIR"
+            cp -r "$DEPLOY_DIR" "$BACKUP_DIR"
+
+            # Keep only last 3 backups
+            ls -dt ${DEPLOY_DIR}.backup.* 2>/dev/null | tail -n +4 | xargs rm -rf 2>/dev/null || true
+          fi
+
+          # Ensure target directory exists
+          mkdir -p "$DEPLOY_DIR"
+
+          # Sync new files (atomic-ish: copy new, then remove old)
+          echo "🚀 Syncing files..."
+          rsync -av --delete dist/ "$DEPLOY_DIR/"
+
+          echo "✅ Deployment complete"
+          echo "📊 Deployed $(find dist -type f | wc -l) files"
+
+      - name: Cleanup artifact
+        if: always()
+        run: rm -rf dist

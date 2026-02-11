@@ -1,13 +1,11 @@
 import type { ContentItem, Medium, BlogFilters } from "./types"
-import { fetchAllGhostPosts } from "./ghost-client"
-import { normalizeGhostPosts } from "./normalize"
+import { fetchAllContent } from "./aggregator"
 
 let _contentCache: ContentItem[] | null = null
 
 async function getContent(): Promise<ContentItem[]> {
     if (_contentCache) return _contentCache
-    const posts = await fetchAllGhostPosts()
-    _contentCache = normalizeGhostPosts(posts)
+    _contentCache = await fetchAllContent()
     return _contentCache
 }
 
