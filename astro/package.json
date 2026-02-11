@@ -20,7 +20,7 @@
     "react": "^19.2.4",
     "react-do": "^1.1.6",
     "react-dom": "^19.2.4",
-    "react-resizable-panels": "^3",
+    "react-resizable-panels": "^4",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
