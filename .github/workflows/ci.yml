@@ -1,0 +1,81 @@
+# CI workflow: Runs on pull requests
+# Validates that tests pass and the site builds successfully
+
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "astro/**"
+      - ".github/workflows/**"
+      - "package.json"
+      - "yarn.lock"
+
+# Cancel in-progress runs for the same PR
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Restrict permissions
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # Security: Only run on PRs from this repo, not forks
+  # This protects the self-hosted runner from malicious code
+  check-origin:
+    name: Verify PR Origin
+    runs-on: ubuntu-latest
+    outputs:
+      is-safe: ${{ steps.check.outputs.is-safe }}
+    steps:
+      - name: Check if PR is from fork
+        id: check
+        run: |
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" = "${{ github.repository }}" ]; then
+            echo "is-safe=true" >> $GITHUB_OUTPUT
+            echo "✅ PR is from the same repository"
+          else
+            echo "is-safe=false" >> $GITHUB_OUTPUT
+            echo "⚠️ PR is from a fork - skipping self-hosted runner jobs"
+            echo "Fork PRs require manual review before running on self-hosted infrastructure"
+          fi
+
+  test:
+    name: Test
+    needs: check-origin
+    if: needs.check-origin.outputs.is-safe == 'true'
+    uses: ./.github/workflows/test.yml
+
+  build:
+    name: Build
+    needs: [check-origin, test]
+    if: needs.check-origin.outputs.is-safe == 'true'
+    uses: ./.github/workflows/build.yml
+    with:
+      upload-artifact: false
+    secrets:
+      GHOST_URL: ${{ secrets.GHOST_URL }}
+      GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
+
+  # Summary job for branch protection rules
+  ci-complete:
+    name: CI Complete
+    runs-on: ubuntu-latest
+    needs: [check-origin, test, build]
+    if: always()
+    steps:
+      - name: Check results
+        run: |
+          if [ "${{ needs.check-origin.outputs.is-safe }}" = "false" ]; then
+            echo "⚠️ Fork PR - CI skipped for security"
+            echo "A maintainer must review and manually trigger CI for fork PRs"
+            exit 0
+          fi
+          if [ "${{ needs.test.result }}" = "failure" ] || [ "${{ needs.build.result }}" = "failure" ]; then
+            echo "❌ CI failed"
+            exit 1
+          fi
+          echo "✅ CI passed"

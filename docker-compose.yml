@@ -1,0 +1,68 @@
+services:
+  # --- Astro Static Frontend ---
+  # Serves pre-built static files from a volume
+  # Files are deployed by GitHub Actions, not built in container
+  personal-profile-astro:
+    image: caddy:2-alpine
+    container_name: personal-profile-astro
+    restart: unless-stopped
+    volumes:
+      - ./astro/Caddyfile:/etc/caddy/Caddyfile:ro
+      - astro-dist:/srv:ro
+    networks:
+      - default
+      - proxy
+
+  # --- Ghost CMS ---
+  personal-profile-ghost:
+    image: ghost:5-alpine
+    container_name: personal-profile-ghost
+    restart: unless-stopped
+    depends_on:
+      personal-profile-db:
+        condition: service_healthy
+    environment:
+      url: ${GHOST_URL}
+      database__client: mysql
+      database__connection__host: personal-profile-db
+      database__connection__user: ${MYSQL_USER}
+      database__connection__password: ${MYSQL_PASSWORD}
+      database__connection__database: ${MYSQL_DATABASE}
+    volumes:
+      - ./ghost/content:/var/lib/ghost/content
+      - ./ghost/themes:/var/lib/ghost/content/themes
+    networks:
+      - default
+      - proxy
+
+  # --- MySQL Database ---
+  personal-profile-db:
+    image: mysql:8
+    container_name: personal-profile-db
+    restart: unless-stopped
+    env_file:
+      - ./ghost/.env
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -u$${MYSQL_USER} -p$${MYSQL_PASSWORD} $${MYSQL_DATABASE} -e 'SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - ./ghost/data/mysql:/var/lib/mysql
+    networks:
+      - default
+
+networks:
+  default:
+  proxy:
+    external: true
+
+volumes:
+  # Astro static files - populated by GitHub Actions deploy
+  astro-dist:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${ASTRO_DIST_PATH:-./deploy/astro}

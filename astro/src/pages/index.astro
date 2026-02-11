@@ -1,11 +1,40 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import HomeHero from "../components/sections/HomeHero";
+import AboutMe from "../components/sections/AboutMe";
+import {LatestArticles} from '../components/sections/Articles'
+import {LatestPodcasts} from '../components/sections/Podcasts'
+import {LatestReadings} from '../components/sections/Readings'
+import {LatestProjects} from '../components/sections/Projects'
+import {NewsletterCta} from '../components/sections/NewsletterCta'
+import {Footer} from '../components/sections/Footer'
 import Layout from '../layouts/Layout.astro';
+import SiteLayout from "../layouts/SiteLayout";
+import {ResizableLayout} from '../layouts/ResizableLayout'
+import {SectionDivider} from '../components/ui/section-divider'
+import {getLatestByMedium} from '../lib/content'
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const latestArticles = await getLatestByMedium("article", 3)
+const latestPodcasts = await getLatestByMedium("podcast", 3)
+const latestReadings = await getLatestByMedium("reading", 3)
+const latestProjects = await getLatestByMedium("project", 3)
 ---
 
 <Layout>
-	<Welcome />
+    <SiteLayout>
+        <HomeHero client:load/>
+        <ResizableLayout client:load>
+            <AboutMe/>
+            <SectionDivider/>
+            <LatestArticles tinted={true} items={latestArticles}/>
+            <SectionDivider/>
+            <LatestPodcasts items={latestPodcasts}/>
+            <SectionDivider/>
+            <LatestReadings tinted={true} items={latestReadings}/>
+            <SectionDivider/>
+            <LatestProjects items={latestProjects}/>
+            <SectionDivider/>
+            <NewsletterCta tinted={true}/>
+        </ResizableLayout>
+        <Footer/>
+    </SiteLayout>
 </Layout>

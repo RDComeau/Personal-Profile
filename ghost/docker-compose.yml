@@ -1,3 +1,9 @@
+# ╔═══════════════════════════════════════════════════════════════╗
+# ║  DEPRECATED: Use the root docker-compose.yml instead.        ║
+# ║  Run `make up` or `docker compose up` from the project root. ║
+# ║  This file is preserved for reference only.                   ║
+# ╚═══════════════════════════════════════════════════════════════╝
+
 services:
   personal-profile-ghost:
     image: ghost:5-alpine

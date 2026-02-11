@@ -1,0 +1,8 @@
+# Internal static file server for the Astro container.
+# The centralized Caddy reverse proxy is a separate project.
+:80 {
+	root * /srv
+	file_server
+	try_files {path} {path}/ /index.html
+	encode gzip
+}
