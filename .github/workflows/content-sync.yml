@@ -4,9 +4,9 @@
 name: Content Sync
 
 on:
-  schedule:
-    # Run every 30 minutes
-    - cron: "*/30 * * * *"
+#   schedule:
+#     # Run every 30 minutes
+#     - cron: "*/30 * * * *"
 
   # Allow manual trigger
   workflow_dispatch:
